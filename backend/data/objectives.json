@@ -1,0 +1,1535 @@
+[
+  {
+    "code": "1.0",
+    "title": "General Security Concepts",
+    "subsections": [
+      {
+        "code": "1.1",
+        "title": "Compare and contrast various types of security controls",
+        "objective": "Compare and contrast various types of security controls.",
+        "topics": [
+          {
+            "name": "Categories of security controls",
+            "subtopics": ["Technical", "Managerial", "Operational", "Physical"]
+          },
+          {
+            "name": "Control types",
+            "subtopics": ["Preventive", "Deterrent", "Detective", "Corrective", "Compensating", "Directive"]
+          }
+        ]
+      },
+      {
+        "code": "1.2",
+        "title": "Summarize fundamental security concepts",
+        "objective": "Summarize fundamental security concepts.",
+        "topics": [
+          {
+            "name": "CIA Triad",
+            "subtopics": ["Confidentiality", "Integrity", "Availability"]
+          },
+          {
+            "name": "Non-repudiation",
+            "subtopics": []
+          },
+          {
+            "name": "Authentication Authorization and Accounting (AAA)",
+            "subtopics": ["Authenticating people", "Authenticating systems", "Authorization models"]
+          },
+          {
+            "name": "Gap analysis",
+            "subtopics": []
+          },
+          {
+            "name": "Zero Trust",
+            "subtopics": [
+              "Control Plane - Adaptive identity",
+              "Control Plane - Threat scope reduction",
+              "Control Plane - Policy-driven access control",
+              "Control Plane - Policy Administrator",
+              "Control Plane - Policy Engine",
+              "Data Plane - Implicit trust zones",
+              "Data Plane - Subject/System",
+              "Data Plane - Policy Enforcement Point"
+            ]
+          },
+          {
+            "name": "Physical security",
+            "subtopics": [
+              "Bollards",
+              "Access control vestibule",
+              "Fencing",
+              "Video surveillance",
+              "Security guard",
+              "Access badge",
+              "Lighting",
+              "Sensors - Infrared",
+              "Sensors - Pressure",
+              "Sensors - Microwave",
+              "Sensors - Ultrasonic"
+            ]
+          },
+          {
+            "name": "Deception and disruption technology",
+            "subtopics": ["Honeypot", "Honeynet", "Honeyfile", "Honeytoken"]
+          }
+        ]
+      },
+      {
+        "code": "1.3",
+        "title": "Explain the importance of change management processes and the impact to security",
+        "objective": "Explain the importance of change management processes and the impact to security.",
+        "topics": [
+          {
+            "name": "Business processes impacting security operation",
+            "subtopics": [
+              "Approval process",
+              "Ownership",
+              "Stakeholders",
+              "Impact analysis",
+              "Test results",
+              "Backout plan",
+              "Maintenance window",
+              "Standard operating procedure"
+            ]
+          },
+          {
+            "name": "Technical implications of change management",
+            "subtopics": [
+              "Allow lists and deny lists",
+              "Restricted activities",
+              "Downtime",
+              "Service restart",
+              "Application restart",
+              "Legacy applications",
+              "Dependencies"
+            ]
+          },
+          {
+            "name": "Documentation",
+            "subtopics": ["Updating diagrams", "Updating policies and procedures"]
+          },
+          {
+            "name": "Version control",
+            "subtopics": []
+          }
+        ]
+      },
+      {
+        "code": "1.4",
+        "title": "Explain the importance of using appropriate cryptographic solutions",
+        "objective": "Explain the importance of using appropriate cryptographic solutions.",
+        "topics": [
+          {
+            "name": "Public Key Infrastructure (PKI)",
+            "subtopics": ["Public key", "Private key", "Key escrow"]
+          },
+          {
+            "name": "Encryption",
+            "subtopics": [
+              "Level - Full-disk",
+              "Level - Partition",
+              "Level - File",
+              "Level - Volume",
+              "Level - Database",
+              "Level - Record",
+              "Transport and communication encryption",
+              "Asymmetric encryption",
+              "Symmetric encryption",
+              "Key exchange",
+              "Algorithms",
+              "Key length"
+            ]
+          },
+          {
+            "name": "Cryptographic tools",
+            "subtopics": [
+              "Trusted Platform Module (TPM)",
+              "Hardware Security Module (HSM)",
+              "Key management system",
+              "Secure enclave"
+            ]
+          },
+          {
+            "name": "Obfuscation techniques",
+            "subtopics": ["Steganography", "Tokenization", "Data masking"]
+          },
+          {
+            "name": "Hashing and salting",
+            "subtopics": []
+          },
+          {
+            "name": "Digital signatures",
+            "subtopics": []
+          },
+          {
+            "name": "Key stretching",
+            "subtopics": []
+          },
+          {
+            "name": "Blockchain and open public ledger",
+            "subtopics": ["Blockchain", "Open public ledger"]
+          },
+          {
+            "name": "Certificates",
+            "subtopics": [
+              "Certificate authorities",
+              "Certificate revocation lists (CRLs)",
+              "Online Certificate Status Protocol (OCSP)",
+              "Self-signed certificates",
+              "Third-party certificates",
+              "Root of trust",
+              "Certificate signing request (CSR) generation",
+              "Wildcard certificates"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "code": "2.0",
+    "title": "Threats, Vulnerabilities, and Mitigations",
+    "subsections": [
+      {
+        "code": "2.1",
+        "title": "Compare and contrast common threat actors and motivations",
+        "objective": "Compare and contrast common threat actors and motivations.",
+        "topics": [
+          {
+            "name": "Threat actor types",
+            "subtopics": [
+              "Nation-state",
+              "Unskilled attacker",
+              "Hacktivist",
+              "Insider threat",
+              "Organized crime",
+              "Shadow IT"
+            ]
+          },
+          {
+            "name": "Attributes of threat actors",
+            "subtopics": [
+              "Internal vs external",
+              "Resources and funding",
+              "Level of sophistication and capability"
+            ]
+          },
+          {
+            "name": "Motivations",
+            "subtopics": [
+              "Data exfiltration",
+              "Espionage",
+              "Service disruption",
+              "Blackmail",
+              "Financial gain",
+              "Philosophical and political beliefs",
+              "Ethical",
+              "Revenge",
+              "Disruption and chaos",
+              "War"
+            ]
+          }
+        ]
+      },
+      {
+        "code": "2.2",
+        "title": "Explain common threat vectors and attack surfaces",
+        "objective": "Explain common threat vectors and attack surfaces.",
+        "topics": [
+          {
+            "name": "Message-based threat vectors",
+            "subtopics": ["Email", "Short Message Service (SMS)", "Instant messaging (IM)"]
+          },
+          {
+            "name": "Image-based threats",
+            "subtopics": []
+          },
+          {
+            "name": "File-based threats",
+            "subtopics": []
+          },
+          {
+            "name": "Voice call threats",
+            "subtopics": []
+          },
+          {
+            "name": "Removable device threats",
+            "subtopics": []
+          },
+          {
+            "name": "Vulnerable software",
+            "subtopics": ["Client-based vs agentless"]
+          },
+          {
+            "name": "Unsupported systems and applications",
+            "subtopics": []
+          },
+          {
+            "name": "Unsecure networks",
+            "subtopics": ["Wireless", "Wired", "Bluetooth"]
+          },
+          {
+            "name": "Open service ports",
+            "subtopics": []
+          },
+          {
+            "name": "Default credentials",
+            "subtopics": []
+          },
+          {
+            "name": "Supply chain attack vectors",
+            "subtopics": ["Managed service providers (MSPs)", "Vendors", "Suppliers"]
+          },
+          {
+            "name": "Human vectors and social engineering",
+            "subtopics": [
+              "Phishing",
+              "Vishing",
+              "Smishing",
+              "Misinformation and disinformation",
+              "Impersonation",
+              "Business email compromise",
+              "Pretexting",
+              "Watering hole",
+              "Brand impersonation",
+              "Typosquatting"
+            ]
+          }
+        ]
+      },
+      {
+        "code": "2.3",
+        "title": "Explain various types of vulnerabilities",
+        "objective": "Explain various types of vulnerabilities.",
+        "topics": [
+          {
+            "name": "Application vulnerabilities",
+            "subtopics": [
+              "Memory injection",
+              "Buffer overflow",
+              "Race conditions - Time-of-check (TOC)",
+              "Race conditions - Time-of-use (TOU)",
+              "Malicious update"
+            ]
+          },
+          {
+            "name": "Operating system (OS)-based vulnerabilities",
+            "subtopics": []
+          },
+          {
+            "name": "Web-based vulnerabilities",
+            "subtopics": [
+              "Structured Query Language injection (SQLi)",
+              "Cross-site scripting (XSS)"
+            ]
+          },
+          {
+            "name": "Hardware vulnerabilities",
+            "subtopics": ["Firmware", "End-of-life", "Legacy hardware"]
+          },
+          {
+            "name": "Virtualization vulnerabilities",
+            "subtopics": ["Virtual machine (VM) escape", "Resource reuse"]
+          },
+          {
+            "name": "Cloud-specific vulnerabilities",
+            "subtopics": []
+          },
+          {
+            "name": "Supply chain vulnerabilities",
+            "subtopics": ["Service provider", "Hardware provider", "Software provider"]
+          },
+          {
+            "name": "Cryptographic vulnerabilities",
+            "subtopics": []
+          },
+          {
+            "name": "Misconfiguration vulnerabilities",
+            "subtopics": []
+          },
+          {
+            "name": "Mobile device vulnerabilities",
+            "subtopics": ["Side loading", "Jailbreaking"]
+          },
+          {
+            "name": "Zero-day vulnerabilities",
+            "subtopics": []
+          }
+        ]
+      },
+      {
+        "code": "2.4",
+        "title": "Given a scenario analyze indicators of malicious activity",
+        "objective": "Given a scenario, analyze indicators of malicious activity.",
+        "topics": [
+          {
+            "name": "Malware attacks",
+            "subtopics": [
+              "Ransomware",
+              "Trojan",
+              "Worm",
+              "Spyware",
+              "Bloatware",
+              "Virus",
+              "Keylogger",
+              "Logic bomb",
+              "Rootkit"
+            ]
+          },
+          {
+            "name": "Physical attacks",
+            "subtopics": [
+              "Brute force",
+              "Radio frequency identification (RFID) cloning",
+              "Environmental attacks"
+            ]
+          },
+          {
+            "name": "Network attacks",
+            "subtopics": [
+              "Distributed denial-of-service (DDoS) - Amplified",
+              "Distributed denial-of-service (DDoS) - Reflected",
+              "Domain Name System (DNS) attacks",
+              "Wireless attacks",
+              "On-path attacks",
+              "Credential replay",
+              "Malicious code"
+            ]
+          },
+          {
+            "name": "Application attacks",
+            "subtopics": [
+              "Injection",
+              "Buffer overflow",
+              "Replay",
+              "Privilege escalation",
+              "Forgery",
+              "Directory traversal"
+            ]
+          },
+          {
+            "name": "Cryptographic attacks",
+            "subtopics": ["Downgrade", "Collision", "Birthday"]
+          },
+          {
+            "name": "Password attacks",
+            "subtopics": ["Spraying", "Brute force"]
+          },
+          {
+            "name": "Indicators of malicious activity",
+            "subtopics": [
+              "Account lockout",
+              "Concurrent session usage",
+              "Blocked content",
+              "Impossible travel",
+              "Resource consumption",
+              "Resource inaccessibility",
+              "Out-of-cycle logging",
+              "Published and documented indicators",
+              "Missing logs"
+            ]
+          }
+        ]
+      },
+      {
+        "code": "2.5",
+        "title": "Explain the purpose of mitigation techniques used to secure the enterprise",
+        "objective": "Explain the purpose of mitigation techniques used to secure the enterprise.",
+        "topics": [
+          {
+            "name": "Segmentation",
+            "subtopics": []
+          },
+          {
+            "name": "Access control",
+            "subtopics": ["Access control list (ACL)", "Permissions"]
+          },
+          {
+            "name": "Application allow list",
+            "subtopics": []
+          },
+          {
+            "name": "Isolation",
+            "subtopics": []
+          },
+          {
+            "name": "Patching",
+            "subtopics": []
+          },
+          {
+            "name": "Encryption as mitigation",
+            "subtopics": []
+          },
+          {
+            "name": "Monitoring as mitigation",
+            "subtopics": []
+          },
+          {
+            "name": "Least privilege",
+            "subtopics": []
+          },
+          {
+            "name": "Configuration enforcement",
+            "subtopics": []
+          },
+          {
+            "name": "Decommissioning",
+            "subtopics": []
+          },
+          {
+            "name": "Hardening techniques",
+            "subtopics": [
+              "Encryption",
+              "Installation of endpoint protection",
+              "Host-based firewall",
+              "Host-based intrusion prevention system (HIPS)",
+              "Disabling ports and protocols",
+              "Default password changes",
+              "Removal of unnecessary software"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "code": "3.0",
+    "title": "Security Architecture",
+    "subsections": [
+      {
+        "code": "3.1",
+        "title": "Compare and contrast security implications of different architecture models",
+        "objective": "Compare and contrast security implications of different architecture models.",
+        "topics": [
+          {
+            "name": "Cloud architecture",
+            "subtopics": [
+              "Responsibility matrix",
+              "Hybrid considerations",
+              "Third-party vendors"
+            ]
+          },
+          {
+            "name": "Infrastructure as Code (IaC)",
+            "subtopics": []
+          },
+          {
+            "name": "Serverless architecture",
+            "subtopics": []
+          },
+          {
+            "name": "Microservices",
+            "subtopics": []
+          },
+          {
+            "name": "Network infrastructure",
+            "subtopics": []
+          },
+          {
+            "name": "Physical isolation",
+            "subtopics": ["Air-gapped systems", "Logical segmentation", "Software-defined networking (SDN)"]
+          },
+          {
+            "name": "On-premises vs centralized vs decentralized",
+            "subtopics": ["On-premises", "Centralized vs decentralized"]
+          },
+          {
+            "name": "Containerization",
+            "subtopics": []
+          },
+          {
+            "name": "Virtualization",
+            "subtopics": []
+          },
+          {
+            "name": "IoT and embedded systems",
+            "subtopics": [
+              "Internet of Things (IoT)",
+              "Industrial control systems (ICS) and SCADA",
+              "Real-time operating system (RTOS)",
+              "Embedded systems"
+            ]
+          },
+          {
+            "name": "High availability",
+            "subtopics": []
+          },
+          {
+            "name": "Architecture considerations",
+            "subtopics": [
+              "Availability",
+              "Resilience",
+              "Cost",
+              "Responsiveness",
+              "Scalability",
+              "Ease of deployment",
+              "Risk transference",
+              "Ease of recovery",
+              "Patch availability",
+              "Inability to patch",
+              "Power",
+              "Compute"
+            ]
+          }
+        ]
+      },
+      {
+        "code": "3.2",
+        "title": "Given a scenario apply security principles to secure enterprise infrastructure",
+        "objective": "Given a scenario, apply security principles to secure enterprise infrastructure.",
+        "topics": [
+          {
+            "name": "Infrastructure considerations",
+            "subtopics": [
+              "Device placement",
+              "Security zones",
+              "Attack surface",
+              "Connectivity"
+            ]
+          },
+          {
+            "name": "Failure modes",
+            "subtopics": ["Fail-open", "Fail-closed"]
+          },
+          {
+            "name": "Device attributes",
+            "subtopics": [
+              "Active vs passive",
+              "Inline vs tap/monitor"
+            ]
+          },
+          {
+            "name": "Network appliances",
+            "subtopics": [
+              "Jump server",
+              "Proxy server",
+              "Intrusion prevention system (IPS)",
+              "Intrusion detection system (IDS)",
+              "Load balancer",
+              "Sensors"
+            ]
+          },
+          {
+            "name": "Port security",
+            "subtopics": [
+              "802.1X",
+              "Extensible Authentication Protocol (EAP)"
+            ]
+          },
+          {
+            "name": "Firewall types",
+            "subtopics": [
+              "Web application firewall (WAF)",
+              "Unified threat management (UTM)",
+              "Next-generation firewall (NGFW)",
+              "Layer 4 firewall",
+              "Layer 7 firewall"
+            ]
+          },
+          {
+            "name": "Secure communication and access",
+            "subtopics": [
+              "Virtual private network (VPN)",
+              "Remote access",
+              "Tunneling - Transport Layer Security (TLS)",
+              "Tunneling - Internet Protocol Security (IPSec)",
+              "Software-defined wide area network (SD-WAN)",
+              "Secure access service edge (SASE)"
+            ]
+          },
+          {
+            "name": "Selection of effective controls",
+            "subtopics": []
+          }
+        ]
+      },
+      {
+        "code": "3.3",
+        "title": "Compare and contrast concepts and strategies to protect data",
+        "objective": "Compare and contrast concepts and strategies to protect data.",
+        "topics": [
+          {
+            "name": "Data types",
+            "subtopics": [
+              "Regulated data",
+              "Trade secret",
+              "Intellectual property",
+              "Legal information",
+              "Financial information",
+              "Human and non-human-readable data"
+            ]
+          },
+          {
+            "name": "Data classifications",
+            "subtopics": [
+              "Sensitive",
+              "Confidential",
+              "Public",
+              "Restricted",
+              "Private",
+              "Critical"
+            ]
+          },
+          {
+            "name": "General data considerations",
+            "subtopics": [
+              "Data states - Data at rest",
+              "Data states - Data in transit",
+              "Data states - Data in use",
+              "Data sovereignty",
+              "Geolocation"
+            ]
+          },
+          {
+            "name": "Methods to secure data",
+            "subtopics": [
+              "Geographic restrictions",
+              "Encryption",
+              "Hashing",
+              "Masking",
+              "Tokenization",
+              "Obfuscation",
+              "Segmentation",
+              "Permission restrictions"
+            ]
+          }
+        ]
+      },
+      {
+        "code": "3.4",
+        "title": "Explain the importance of resilience and recovery in security architecture",
+        "objective": "Explain the importance of resilience and recovery in security architecture.",
+        "topics": [
+          {
+            "name": "High availability",
+            "subtopics": ["Load balancing vs clustering"]
+          },
+          {
+            "name": "Site considerations",
+            "subtopics": ["Hot site", "Cold site", "Warm site", "Geographic dispersion"]
+          },
+          {
+            "name": "Platform diversity",
+            "subtopics": []
+          },
+          {
+            "name": "Multi-cloud systems",
+            "subtopics": []
+          },
+          {
+            "name": "Continuity of operations",
+            "subtopics": []
+          },
+          {
+            "name": "Capacity planning",
+            "subtopics": ["People", "Technology", "Infrastructure"]
+          },
+          {
+            "name": "Testing resilience and recovery",
+            "subtopics": [
+              "Tabletop exercises",
+              "Failover testing",
+              "Simulation",
+              "Parallel processing"
+            ]
+          },
+          {
+            "name": "Backup strategies",
+            "subtopics": [
+              "Onsite and offsite backups",
+              "Backup frequency",
+              "Encryption of backups",
+              "Snapshots",
+              "Recovery",
+              "Replication",
+              "Journaling"
+            ]
+          },
+          {
+            "name": "Power resilience",
+            "subtopics": ["Generators", "Uninterruptible power supply (UPS)"]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "code": "4.0",
+    "title": "Security Operations",
+    "subsections": [
+      {
+        "code": "4.1",
+        "title": "Given a scenario apply common security techniques to computing resources",
+        "objective": "Given a scenario, apply common security techniques to computing resources.",
+        "topics": [
+          {
+            "name": "Secure baselines",
+            "subtopics": ["Establish", "Deploy", "Maintain"]
+          },
+          {
+            "name": "Hardening targets",
+            "subtopics": [
+              "Mobile devices",
+              "Workstations",
+              "Switches",
+              "Routers",
+              "Cloud infrastructure",
+              "Servers",
+              "ICS and SCADA",
+              "Embedded systems",
+              "RTOS",
+              "IoT devices"
+            ]
+          },
+          {
+            "name": "Wireless device installation considerations",
+            "subtopics": ["Site surveys", "Heat maps"]
+          },
+          {
+            "name": "Mobile solutions",
+            "subtopics": [
+              "Mobile device management (MDM)",
+              "Deployment model - Bring your own device (BYOD)",
+              "Deployment model - Corporate-owned personally enabled (COPE)",
+              "Deployment model - Choose your own device (CYOD)",
+              "Connection method - Cellular",
+              "Connection method - Wi-Fi",
+              "Connection method - Bluetooth"
+            ]
+          },
+          {
+            "name": "Wireless security settings",
+            "subtopics": [
+              "Wi-Fi Protected Access 3 (WPA3)",
+              "AAA and RADIUS",
+              "Cryptographic protocols",
+              "Authentication protocols"
+            ]
+          },
+          {
+            "name": "Application security",
+            "subtopics": [
+              "Input validation",
+              "Secure cookies",
+              "Static code analysis",
+              "Code signing"
+            ]
+          },
+          {
+            "name": "Sandboxing",
+            "subtopics": []
+          },
+          {
+            "name": "Monitoring computing resources",
+            "subtopics": []
+          }
+        ]
+      },
+      {
+        "code": "4.2",
+        "title": "Explain the security implications of proper hardware software and data asset management",
+        "objective": "Explain the security implications of proper hardware, software, and data asset management.",
+        "topics": [
+          {
+            "name": "Acquisition and procurement process",
+            "subtopics": []
+          },
+          {
+            "name": "Assignment and accounting",
+            "subtopics": ["Ownership", "Classification"]
+          },
+          {
+            "name": "Monitoring and asset tracking",
+            "subtopics": ["Inventory", "Enumeration"]
+          },
+          {
+            "name": "Disposal and decommissioning",
+            "subtopics": [
+              "Sanitization",
+              "Destruction",
+              "Certification",
+              "Data retention"
+            ]
+          }
+        ]
+      },
+      {
+        "code": "4.3",
+        "title": "Explain various activities associated with vulnerability management",
+        "objective": "Explain various activities associated with vulnerability management.",
+        "topics": [
+          {
+            "name": "Vulnerability identification methods",
+            "subtopics": [
+              "Vulnerability scan",
+              "Application security - Static analysis",
+              "Application security - Dynamic analysis",
+              "Application security - Package monitoring",
+              "Threat feed - Open-source intelligence (OSINT)",
+              "Threat feed - Proprietary and third-party",
+              "Threat feed - Information-sharing organization",
+              "Threat feed - Dark web",
+              "Penetration testing",
+              "Responsible disclosure program and bug bounty",
+              "System and process audit"
+            ]
+          },
+          {
+            "name": "Vulnerability analysis",
+            "subtopics": [
+              "Confirmation - False positive",
+              "Confirmation - False negative",
+              "Prioritization",
+              "Common Vulnerability Scoring System (CVSS)",
+              "Common Vulnerability Enumeration (CVE)",
+              "Vulnerability classification",
+              "Exposure factor",
+              "Environmental variables",
+              "Industry and organizational impact",
+              "Risk tolerance"
+            ]
+          },
+          {
+            "name": "Vulnerability response and remediation",
+            "subtopics": [
+              "Patching",
+              "Insurance",
+              "Segmentation",
+              "Compensating controls",
+              "Exceptions and exemptions"
+            ]
+          },
+          {
+            "name": "Validation of remediation",
+            "subtopics": ["Rescanning", "Audit", "Verification"]
+          },
+          {
+            "name": "Vulnerability reporting",
+            "subtopics": []
+          }
+        ]
+      },
+      {
+        "code": "4.4",
+        "title": "Explain security alerting and monitoring concepts and tools",
+        "objective": "Explain security alerting and monitoring concepts and tools.",
+        "topics": [
+          {
+            "name": "Monitoring computing resources",
+            "subtopics": ["Systems", "Applications", "Infrastructure"]
+          },
+          {
+            "name": "Monitoring activities",
+            "subtopics": [
+              "Log aggregation",
+              "Alerting",
+              "Scanning",
+              "Reporting",
+              "Archiving",
+              "Alert response and remediation - Quarantine",
+              "Alert response and remediation - Alert tuning"
+            ]
+          },
+          {
+            "name": "Monitoring and alerting tools",
+            "subtopics": [
+              "Security Content Automation Protocol (SCAP)",
+              "Benchmarks",
+              "Agents and agentless monitoring",
+              "Security information and event management (SIEM)",
+              "Antivirus",
+              "Data loss prevention (DLP)",
+              "Simple Network Management Protocol (SNMP) traps",
+              "NetFlow",
+              "Vulnerability scanners"
+            ]
+          }
+        ]
+      },
+      {
+        "code": "4.5",
+        "title": "Given a scenario modify enterprise capabilities to enhance security",
+        "objective": "Given a scenario, modify enterprise capabilities to enhance security.",
+        "topics": [
+          {
+            "name": "Firewall configuration",
+            "subtopics": ["Rules", "Access lists", "Ports and protocols", "Screened subnets"]
+          },
+          {
+            "name": "IDS and IPS configuration",
+            "subtopics": ["Trends", "Signatures"]
+          },
+          {
+            "name": "Web filtering",
+            "subtopics": [
+              "Agent-based",
+              "Centralized proxy",
+              "URL scanning",
+              "Content categorization",
+              "Block rules",
+              "Reputation"
+            ]
+          },
+          {
+            "name": "Operating system security",
+            "subtopics": ["Group Policy", "SELinux"]
+          },
+          {
+            "name": "Implementation of secure protocols",
+            "subtopics": ["Protocol selection", "Port selection", "Transport method"]
+          },
+          {
+            "name": "DNS filtering",
+            "subtopics": []
+          },
+          {
+            "name": "Email security",
+            "subtopics": [
+              "Domain-based Message Authentication Reporting and Conformance (DMARC)",
+              "DomainKeys Identified Mail (DKIM)",
+              "Sender Policy Framework (SPF)",
+              "Email gateway"
+            ]
+          },
+          {
+            "name": "File integrity monitoring",
+            "subtopics": []
+          },
+          {
+            "name": "Data loss prevention (DLP)",
+            "subtopics": []
+          },
+          {
+            "name": "Network access control (NAC)",
+            "subtopics": []
+          },
+          {
+            "name": "Endpoint detection and response (EDR) and extended detection and response (XDR)",
+            "subtopics": []
+          },
+          {
+            "name": "User behavior analytics",
+            "subtopics": []
+          }
+        ]
+      },
+      {
+        "code": "4.6",
+        "title": "Given a scenario implement and maintain identity and access management",
+        "objective": "Given a scenario, implement and maintain identity and access management.",
+        "topics": [
+          {
+            "name": "Provisioning and de-provisioning user accounts",
+            "subtopics": []
+          },
+          {
+            "name": "Permission assignments and implications",
+            "subtopics": []
+          },
+          {
+            "name": "Identity proofing",
+            "subtopics": []
+          },
+          {
+            "name": "Federation",
+            "subtopics": []
+          },
+          {
+            "name": "Single sign-on (SSO)",
+            "subtopics": [
+              "Lightweight Directory Access Protocol (LDAP)",
+              "Open authorization (OAuth)",
+              "Security Assertions Markup Language (SAML)"
+            ]
+          },
+          {
+            "name": "Interoperability",
+            "subtopics": []
+          },
+          {
+            "name": "Attestation",
+            "subtopics": []
+          },
+          {
+            "name": "Access control types",
+            "subtopics": [
+              "Mandatory access control (MAC)",
+              "Discretionary access control (DAC)",
+              "Role-based access control (RBAC)",
+              "Rule-based access control",
+              "Attribute-based access control",
+              "Time-of-day restrictions",
+              "Least privilege"
+            ]
+          },
+          {
+            "name": "Multifactor authentication (MFA)",
+            "subtopics": [
+              "Implementation - Biometrics",
+              "Implementation - Hard and soft authentication tokens",
+              "Implementation - Security keys",
+              "Factor - Something you know",
+              "Factor - Something you have",
+              "Factor - Something you are",
+              "Factor - Somewhere you are"
+            ]
+          },
+          {
+            "name": "Password concepts",
+            "subtopics": [
+              "Password best practices - Length",
+              "Password best practices - Complexity",
+              "Password best practices - Reuse",
+              "Password best practices - Expiration",
+              "Password best practices - Age",
+              "Password managers",
+              "Passwordless authentication"
+            ]
+          },
+          {
+            "name": "Privileged access management (PAM) tools",
+            "subtopics": [
+              "Just-in-time permissions",
+              "Password vaulting",
+              "Ephemeral credentials"
+            ]
+          }
+        ]
+      },
+      {
+        "code": "4.7",
+        "title": "Explain the importance of automation and orchestration related to secure operations",
+        "objective": "Explain the importance of automation and orchestration related to secure operations.",
+        "topics": [
+          {
+            "name": "Use cases of automation and scripting",
+            "subtopics": [
+              "User provisioning",
+              "Resource provisioning",
+              "Guard rails",
+              "Security groups",
+              "Ticket creation",
+              "Escalation",
+              "Enabling and disabling services and access",
+              "Continuous integration and testing",
+              "Integrations and APIs"
+            ]
+          },
+          {
+            "name": "Benefits of automation and orchestration",
+            "subtopics": [
+              "Efficiency and time saving",
+              "Enforcing baselines",
+              "Standard infrastructure configurations",
+              "Scaling in a secure manner",
+              "Employee retention",
+              "Reaction time",
+              "Workforce multiplier"
+            ]
+          },
+          {
+            "name": "Automation considerations and trade-offs",
+            "subtopics": [
+              "Complexity",
+              "Cost",
+              "Single point of failure",
+              "Technical debt",
+              "Ongoing supportability"
+            ]
+          }
+        ]
+      },
+      {
+        "code": "4.8",
+        "title": "Explain appropriate incident response activities",
+        "objective": "Explain appropriate incident response activities.",
+        "topics": [
+          {
+            "name": "Incident response process",
+            "subtopics": [
+              "Preparation",
+              "Detection",
+              "Analysis",
+              "Containment",
+              "Eradication",
+              "Recovery",
+              "Lessons learned"
+            ]
+          },
+          {
+            "name": "Incident response training",
+            "subtopics": []
+          },
+          {
+            "name": "Incident response testing",
+            "subtopics": ["Tabletop exercise", "Simulation"]
+          },
+          {
+            "name": "Root cause analysis",
+            "subtopics": []
+          },
+          {
+            "name": "Threat hunting",
+            "subtopics": []
+          },
+          {
+            "name": "Digital forensics",
+            "subtopics": [
+              "Legal hold",
+              "Chain of custody",
+              "Acquisition",
+              "Reporting",
+              "Preservation",
+              "E-discovery"
+            ]
+          }
+        ]
+      },
+      {
+        "code": "4.9",
+        "title": "Given a scenario use data sources to support an investigation",
+        "objective": "Given a scenario, use data sources to support an investigation.",
+        "topics": [
+          {
+            "name": "Log data",
+            "subtopics": [
+              "Firewall logs",
+              "Application logs",
+              "Endpoint logs",
+              "OS-specific security logs",
+              "IPS and IDS logs",
+              "Network logs",
+              "Metadata"
+            ]
+          },
+          {
+            "name": "Investigation data sources",
+            "subtopics": [
+              "Vulnerability scans",
+              "Automated reports",
+              "Dashboards",
+              "Packet captures"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "code": "5.0",
+    "title": "Security Program Management and Oversight",
+    "subsections": [
+      {
+        "code": "5.1",
+        "title": "Summarize elements of effective security governance",
+        "objective": "Summarize elements of effective security governance.",
+        "topics": [
+          {
+            "name": "Guidelines",
+            "subtopics": []
+          },
+          {
+            "name": "Policies",
+            "subtopics": [
+              "Acceptable use policy (AUP)",
+              "Information security policies",
+              "Business continuity",
+              "Disaster recovery",
+              "Incident response",
+              "Software development lifecycle (SDLC)",
+              "Change management"
+            ]
+          },
+          {
+            "name": "Standards",
+            "subtopics": [
+              "Password standards",
+              "Access control standards",
+              "Physical security standards",
+              "Encryption standards"
+            ]
+          },
+          {
+            "name": "Procedures",
+            "subtopics": [
+              "Change management procedures",
+              "Onboarding and offboarding",
+              "Playbooks"
+            ]
+          },
+          {
+            "name": "External considerations",
+            "subtopics": [
+              "Regulatory",
+              "Legal",
+              "Industry",
+              "Local and regional",
+              "National",
+              "Global"
+            ]
+          },
+          {
+            "name": "Monitoring and revision",
+            "subtopics": []
+          },
+          {
+            "name": "Types of governance structures",
+            "subtopics": [
+              "Boards",
+              "Committees",
+              "Government entities",
+              "Centralized vs decentralized"
+            ]
+          },
+          {
+            "name": "Roles and responsibilities for systems and data",
+            "subtopics": [
+              "Owners",
+              "Controllers",
+              "Processors",
+              "Custodians and stewards"
+            ]
+          }
+        ]
+      },
+      {
+        "code": "5.2",
+        "title": "Explain elements of the risk management process",
+        "objective": "Explain elements of the risk management process.",
+        "topics": [
+          {
+            "name": "Risk identification",
+            "subtopics": []
+          },
+          {
+            "name": "Risk assessment",
+            "subtopics": ["Ad hoc", "Recurring", "One-time", "Continuous"]
+          },
+          {
+            "name": "Risk analysis",
+            "subtopics": [
+              "Qualitative analysis",
+              "Quantitative analysis",
+              "Single loss expectancy (SLE)",
+              "Annualized loss expectancy (ALE)",
+              "Annualized rate of occurrence (ARO)",
+              "Probability",
+              "Likelihood",
+              "Exposure factor",
+              "Impact"
+            ]
+          },
+          {
+            "name": "Risk register",
+            "subtopics": ["Key risk indicators", "Risk owners", "Risk threshold"]
+          },
+          {
+            "name": "Risk tolerance",
+            "subtopics": []
+          },
+          {
+            "name": "Risk appetite",
+            "subtopics": ["Expansionary", "Conservative", "Neutral"]
+          },
+          {
+            "name": "Risk management strategies",
+            "subtopics": [
+              "Transfer",
+              "Accept - Exemption",
+              "Accept - Exception",
+              "Avoid",
+              "Mitigate"
+            ]
+          },
+          {
+            "name": "Risk reporting",
+            "subtopics": []
+          },
+          {
+            "name": "Business impact analysis",
+            "subtopics": [
+              "Recovery time objective (RTO)",
+              "Recovery point objective (RPO)",
+              "Mean time to repair (MTTR)",
+              "Mean time between failures (MTBF)"
+            ]
+          }
+        ]
+      },
+      {
+        "code": "5.3",
+        "title": "Explain the processes associated with third-party risk assessment and management",
+        "objective": "Explain the processes associated with third-party risk assessment and management.",
+        "topics": [
+          {
+            "name": "Vendor assessment",
+            "subtopics": [
+              "Penetration testing",
+              "Right-to-audit clause",
+              "Evidence of internal audits",
+              "Independent assessments",
+              "Supply chain analysis"
+            ]
+          },
+          {
+            "name": "Vendor selection",
+            "subtopics": ["Due diligence", "Conflict of interest"]
+          },
+          {
+            "name": "Agreement types",
+            "subtopics": [
+              "Service-level agreement (SLA)",
+              "Memorandum of agreement (MOA)",
+              "Memorandum of understanding (MOU)",
+              "Master service agreement (MSA)",
+              "Work order (WO) and statement of work (SOW)",
+              "Non-disclosure agreement (NDA)",
+              "Business partners agreement (BPA)"
+            ]
+          },
+          {
+            "name": "Vendor monitoring",
+            "subtopics": []
+          },
+          {
+            "name": "Questionnaires",
+            "subtopics": []
+          },
+          {
+            "name": "Rules of engagement",
+            "subtopics": []
+          }
+        ]
+      },
+      {
+        "code": "5.4",
+        "title": "Summarize elements of effective security compliance",
+        "objective": "Summarize elements of effective security compliance.",
+        "topics": [
+          {
+            "name": "Compliance reporting",
+            "subtopics": ["Internal reporting", "External reporting"]
+          },
+          {
+            "name": "Consequences of non-compliance",
+            "subtopics": [
+              "Fines",
+              "Sanctions",
+              "Reputational damage",
+              "Loss of license",
+              "Contractual impacts"
+            ]
+          },
+          {
+            "name": "Compliance monitoring",
+            "subtopics": [
+              "Due diligence and care",
+              "Attestation and acknowledgement",
+              "Internal and external monitoring",
+              "Automation"
+            ]
+          },
+          {
+            "name": "Privacy",
+            "subtopics": [
+              "Legal implications - Local and regional",
+              "Legal implications - National",
+              "Legal implications - Global",
+              "Data subject",
+              "Controller vs processor",
+              "Ownership",
+              "Data inventory and retention",
+              "Right to be forgotten"
+            ]
+          }
+        ]
+      },
+      {
+        "code": "5.5",
+        "title": "Explain types and purposes of audits and assessments",
+        "objective": "Explain types and purposes of audits and assessments.",
+        "topics": [
+          {
+            "name": "Attestation",
+            "subtopics": []
+          },
+          {
+            "name": "Internal audits and assessments",
+            "subtopics": [
+              "Compliance audits",
+              "Audit committee",
+              "Self-assessments"
+            ]
+          },
+          {
+            "name": "External audits and assessments",
+            "subtopics": [
+              "Regulatory",
+              "Examinations",
+              "Assessment",
+              "Independent third-party audit"
+            ]
+          },
+          {
+            "name": "Penetration testing",
+            "subtopics": [
+              "Physical penetration testing",
+              "Offensive penetration testing",
+              "Defensive penetration testing",
+              "Integrated penetration testing",
+              "Known environment (white box)",
+              "Partially known environment (grey box)",
+              "Unknown environment (black box)",
+              "Reconnaissance - Passive",
+              "Reconnaissance - Active"
+            ]
+          }
+        ]
+      },
+      {
+        "code": "5.6",
+        "title": "Given a scenario implement security awareness practices",
+        "objective": "Given a scenario, implement security awareness practices.",
+        "topics": [
+          {
+            "name": "Phishing awareness",
+            "subtopics": [
+              "Phishing campaigns",
+              "Recognizing a phishing attempt",
+              "Responding to reported suspicious messages"
+            ]
+          },
+          {
+            "name": "Anomalous behavior recognition",
+            "subtopics": ["Risky behavior", "Unexpected behavior", "Unintentional behavior"]
+          },
+          {
+            "name": "User guidance and training",
+            "subtopics": [
+              "Policy and handbooks",
+              "Situational awareness",
+              "Insider threat awareness",
+              "Password management",
+              "Removable media and cables",
+              "Social engineering awareness",
+              "Operational security",
+              "Hybrid and remote work environments"
+            ]
+          },
+          {
+            "name": "Reporting and monitoring",
+            "subtopics": ["Initial reporting", "Recurring reporting"]
+          },
+          {
+            "name": "Development of awareness programs",
+            "subtopics": []
+          },
+          {
+            "name": "Execution of awareness programs",
+            "subtopics": []
+          }
+        ]
+      }
+    ]
+  }
+]

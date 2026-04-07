@@ -1,0 +1,27 @@
+# Dependencies
+node_modules/
+backend/node_modules/
+frontend/node_modules/
+
+# Database Files (Sensitive Data & API Keys)
+backend/data/*.db
+backend/data/*.sqlite
+backend/data/*.sqlite3
+backend/data/*.db-journal
+
+# Uploaded Files
+uploads/
+backend/pdf_output.txt
+
+# Production Build
+frontend/dist/
+
+# Environment Variables
+.env
+.env.local
+.env.development
+.env.production
+
+# OS generated files
+.DS_Store
+Thumbs.db

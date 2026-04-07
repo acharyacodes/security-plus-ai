@@ -1,0 +1,147 @@
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Link, useNavigate, useLocation } from 'react-router-dom';
+import { LayoutDashboard, BookOpen, BarChart3, Settings, ShieldCheck, ChevronRight, Menu, X, Sparkles } from 'lucide-react';
+import axios from 'axios';
+
+// Pages (to be implemented next)
+import Setup from './pages/Setup';
+import Dashboard from './pages/Dashboard';
+import StudySession from './pages/StudySession';
+import Analytics from './pages/Analytics';
+import SettingsPage from './pages/Settings';
+import CustomBuilder from './pages/CustomBuilder';
+import CustomSession from './pages/CustomSession';
+
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { error: null };
+  }
+  static getDerivedStateFromError(error) {
+    return { error };
+  }
+  render() {
+    if (this.state.error) {
+      return (
+        <div className="absolute inset-0 z-50 bg-red-900 text-white p-10 flex flex-col items-center justify-center">
+          <h1 className="text-4xl font-bold mb-4">React Render Crash Captured</h1>
+          <p className="text-xl font-mono bg-black p-4 rounded">{this.state.error.message}</p>
+          <pre className="mt-4 text-sm font-mono text-left bg-black p-4 w-full overflow-auto max-h-96">
+            {this.state.error.stack}
+          </pre>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
+const Sidebar = () => {
+  const location = useLocation();
+  const menuItems = [
+    { name: 'Dashboard', path: '/', icon: <LayoutDashboard size={20} /> },
+    { name: 'Study', path: '/study', icon: <BookOpen size={20} />, disabled: true }, // Study is usually accessed via Dashboard subsections
+    { name: 'Analytics', path: '/analytics', icon: <BarChart3 size={20} /> },
+    { name: 'Custom Test', path: '/custom-builder', icon: <Sparkles size={20} /> },
+    { name: 'Settings', path: '/settings', icon: <Settings size={20} /> },
+  ];
+
+  return (
+    <aside className="h-screen w-64 bg-slate-900 border-r border-slate-800 flex flex-col p-4 fixed left-0 top-0 z-50">
+      <div className="flex items-center gap-3 mb-10 px-2">
+        <div className="w-10 h-10 rounded-xl bg-sky-500 flex items-center justify-center shadow-lg shadow-sky-500/20">
+          <ShieldCheck className="text-white" size={24} />
+        </div>
+        <h1 className="text-xl font-bold tracking-tight">Security+ <span className="text-sky-400">AI</span></h1>
+      </div>
+
+      <nav className="flex-1 space-y-2">
+        {menuItems.map((item) => (
+          <Link
+            key={item.name}
+            to={item.disabled ? '#' : item.path}
+            className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${
+              location.pathname === item.path 
+                ? 'bg-sky-500/10 text-sky-400 border border-sky-500/20 shadow-sm' 
+                : 'text-slate-400 hover:text-slate-100 hover:bg-slate-800'
+            } ${item.disabled ? 'opacity-50 cursor-not-allowed hidden' : ''}`}
+          >
+            {item.icon}
+            <span className="font-medium">{item.name}</span>
+            {location.pathname === item.path && <ChevronRight size={16} className="ml-auto" />}
+          </Link>
+        ))}
+      </nav>
+
+      <div className="mt-auto p-4 rounded-2xl bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-800">
+        <p className="text-xs text-slate-500 mb-1">Current Goal</p>
+        <p className="text-sm font-semibold text-slate-200">SY0-701 Mastery</p>
+        <div className="w-full bg-slate-700 h-1.5 rounded-full mt-2">
+          <div className="bg-sky-500 h-full rounded-full w-0 transition-all duration-1000" id="global-progress"></div>
+        </div>
+      </div>
+    </aside>
+  );
+};
+
+const AppContent = () => {
+  const [isSetup, setIsSetup] = useState(null);
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    checkSetupStatus();
+  }, []);
+
+  const checkSetupStatus = async () => {
+    try {
+      const { data } = await axios.get('http://localhost:3000/api/setup/status');
+      setIsSetup(data.isSetup);
+      if (!data.isSetup && location.pathname !== '/setup') {
+        navigate('/setup');
+      }
+    } catch (err) {
+      console.error("Failed to check setup status", err);
+      // Assume local dev server not running or first-time
+      setIsSetup(false);
+    }
+  };
+
+  if (isSetup === null) return (
+    <div className="min-h-screen bg-slate-950 flex items-center justify-center">
+      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-sky-500"></div>
+    </div>
+  );
+
+  const showSidebar = location.pathname !== '/setup' && isSetup;
+
+  return (
+    <div className="flex min-h-screen bg-slate-950 text-slate-100">
+      {showSidebar && <Sidebar />}
+      <main className={`flex-1 transition-all duration-300 ${showSidebar ? 'pl-64' : ''}`}>
+        <div className="max-w-7xl mx-auto p-6 md:p-10">
+          <Routes>
+            <Route path="/setup" element={<Setup onSetupComplete={() => { setIsSetup(true); navigate('/'); }} />} />
+            <Route path="/" element={<ErrorBoundary><Dashboard /></ErrorBoundary>} />
+            <Route path="/study/:subsectionId" element={<StudySession />} />
+            <Route path="/analytics/:subsectionId" element={<Analytics />} />
+            <Route path="/analytics" element={<Analytics />} />
+            <Route path="/settings" element={<SettingsPage />} />
+            <Route path="/custom-builder" element={<CustomBuilder />} />
+            <Route path="/custom-session/:testId" element={<CustomSession />} />
+          </Routes>
+        </div>
+      </main>
+    </div>
+  );
+};
+
+function App() {
+  return (
+    <Router>
+      <AppContent />
+    </Router>
+  );
+}
+
+export default App;
