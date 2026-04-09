@@ -19,9 +19,9 @@ router.post('/', (req, res) => {
   const upsert = db.prepare('INSERT OR REPLACE INTO settings (key, value) VALUES (?, ?)');
   
   db.transaction(() => {
-    if (provider) upsert.run('provider', provider);
-    if (model) upsert.run('model', model);
-    if (apiKey) upsert.run('apiKey', apiKey);
+    if (provider) upsert.run('provider', provider.trim());
+    if (model) upsert.run('model', model.trim());
+    if (apiKey) upsert.run('apiKey', apiKey.trim());
   })();
 
   res.json({ message: 'Settings saved' });
@@ -34,27 +34,33 @@ router.post('/test', async (req, res) => {
   try {
     let result = false;
     if (provider === 'gemini' || provider === 'google') {
-      const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+      const cleanModel = model.trim();
+      const cleanKey = apiKey.trim();
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/${cleanModel}:generateContent?key=${cleanKey}`;
       const response = await axios.post(url, {
         contents: [{ parts: [{ text: "Hello, reply with 'ok'" }] }]
       });
       result = response.status === 200;
     } else if (provider === 'openai') {
+      const cleanKey = apiKey.trim();
+      const cleanModel = model.trim();
       const response = await axios.post('https://api.openai.com/v1/chat/completions', {
-        model: model,
+        model: cleanModel,
         messages: [{ role: "user", content: "Hello" }]
       }, {
-        headers: { 'Authorization': `Bearer ${apiKey}` }
+        headers: { 'Authorization': `Bearer ${cleanKey}` }
       });
       result = response.status === 200;
     } else if (provider === 'anthropic') {
+      const cleanKey = apiKey.trim();
+      const cleanModel = model.trim();
       const response = await axios.post('https://api.anthropic.com/v1/messages', {
-        model: model,
+        model: cleanModel,
         max_tokens: 10,
         messages: [{ role: "user", content: "Hello" }]
       }, {
         headers: { 
-          'x-api-key': apiKey,
+          'x-api-key': cleanKey,
           'anthropic-version': '2023-06-01',
           'content-type': 'application/json'
         }

@@ -66,7 +66,8 @@ const Settings = () => {
       const { data } = await axios.post('/api/settings/test', settings);
       setTestResult(data.success ? 'success' : 'error');
     } catch (err) {
-      setTestResult('error');
+      const msg = err.response?.data?.error || err.message;
+      setTestResult({ status: 'error', message: msg });
     } finally {
       setTesting(false);
     }
@@ -187,8 +188,16 @@ const Settings = () => {
                   <CheckCircle2 size={18} /> CONNECTION REIFIED
                 </div>
               )}
+              {testResult?.status === 'error' && (
+                <div className="text-rose-400 flex flex-col gap-1 text-sm font-bold animate-fade-in max-w-md">
+                   <div className="flex items-center gap-2">
+                    <AlertCircle size={18} /> AUTHENTICATION FAILED
+                   </div>
+                   <p className="text-xs font-normal text-rose-500/80 pl-6">{testResult.message}</p>
+                </div>
+              )}
               {testResult === 'error' && (
-                <div className="text-rose-400 flex items-center gap-2 text-sm font-bold animate-fade-in">
+                 <div className="text-rose-400 flex items-center gap-2 text-sm font-bold animate-fade-in">
                   <AlertCircle size={18} /> AUTHENTICATION FAILED
                 </div>
               )}
