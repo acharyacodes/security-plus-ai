@@ -4,11 +4,13 @@ Because Security+ AI uses a local SQLite database and relies on your personal AP
 
 ## 1. Acquiring an API Key
 
-This application uses Google Gemini to dynamically generate exam questions.
-1. Go to [Google AI Studio](https://aistudio.google.com/app/apikey).
-2. Sign in with your Google account.
-3. Click **Create API Key**.
-4. Copy this key; you will need it for the application.
+This application supports multiple AI providers. You can choose any of the following based on your preference or existing accounts:
+
+- **OpenAI**: Get a key from [platform.openai.com](https://platform.openai.com/api-keys).
+- **Anthropic Claude**: Get a key from [console.anthropic.com](https://console.anthropic.com/settings/keys).
+- **Google Gemini**: Get a free key from [Google AI Studio](https://aistudio.google.com/app/apikey).
+
+Copy your chosen key; you will need it during the app configuration.
 
 ## 2. Acquiring the Syllabus
 The application builds its internal database structure by parsing the official syllabus.
@@ -32,6 +34,6 @@ npm run dev
 2. The UI will detect that the `study.db` file does not exist, or that it is empty, and will redirect you to the Setup Wizard.
 3. Upload the SY0-701 PDF. The backend will parse it, extract the 5 major Domains and all subtopics, and write this hierarchy into your new local database.
 4. Once completed, navigate to the **Settings** page via the sidebar.
-5. Paste your Gemini API key in the input field and click Save.
+5. Select your AI provider, enter your desired model name (e.g. `claude-3-5-sonnet-latest`), paste your API key, and click Save.
 
 Your study environment is now fully active, private, and ready for use.

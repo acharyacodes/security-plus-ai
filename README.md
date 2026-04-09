@@ -3,6 +3,8 @@
 [![React](https://img.shields.io/badge/React-18-blue.svg)](https://reactjs.org/)
 [![Node.js](https://img.shields.io/badge/Node.js-20-green.svg)](https://nodejs.org/)
 [![Vite](https://img.shields.io/badge/Vite-5-purple.svg)](https://vitejs.dev/)
+[![OpenAI](https://img.shields.io/badge/AI-OpenAI-green.svg)](https://openai.com/)
+[![Anthropic](https://img.shields.io/badge/AI-Anthropic-purple.svg)](https://anthropic.com/)
 [![Gemini](https://img.shields.io/badge/AI-Google_Gemini-orange.svg)](https://ai.google.dev/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
@@ -14,7 +16,7 @@ An adaptive, AI-powered **CompTIA Security+ (SY0-701) practice test** platform t
 
 Static question banks get memorized fast. Once you've seen the same 500 questions a few times, you stop learning and start pattern-matching — which won't cut it on exam day.
 
-This platform uses **Google Gemini AI** to generate fresh, contextual Security+ practice questions on demand, pulling directly from the official CompTIA SY0-701 exam objectives PDF. Every question is new. Every session adapts to what you actually need to work on.
+This platform uses **OpenAI GPT, Anthropic Claude, or Google Gemini AI (your choice!)** to generate fresh, contextual Security+ practice questions on demand, pulling directly from the official CompTIA SY0-701 exam objectives PDF. Every question is new. Every session adapts to what you actually need to work on.
 
 - **Aligned to the official syllabus** — parses the real CompTIA SY0-701 objectives PDF, not a third-party interpretation.
 - **Adaptive difficulty** — shifts between definition recall, scenario-based application, and multi-select triage based on your performance history.
@@ -71,7 +73,7 @@ All five SY0-701 domains are covered, weighted to match the real exam:
 
 ### Prerequisites
 - [Node.js](https://nodejs.org/) v18 or higher
-- A free [Google Gemini API Key](https://aistudio.google.com/app/apikey)
+- An API Key from [OpenAI](https://platform.openai.com/), [Anthropic](https://console.anthropic.com/), or [Google Gemini](https://aistudio.google.com/app/apikey)
 
 ### Installation
 
@@ -102,7 +104,7 @@ cd frontend && npm run dev
 1. Open **http://localhost:5173** in your browser.
 2. The app will detect no database and redirect you to the `/setup` wizard.
 3. Upload your official CompTIA SY0-701 Objectives PDF.
-4. Go to **Settings** and paste in your Gemini API key.
+4. Go to **Settings**, select your preferred AI provider, specify the exact model (e.g. `gpt-4o`), and paste your API key.
 
 That's it. You're ready to start your first practice session.
 
@@ -157,7 +159,7 @@ security-plus-ai/
 | Frontend | React 18 (Vite), Axios, Lucide React |
 | Backend | Node.js, Express |
 | Database | SQLite3 via `better-sqlite3` |
-| AI | Google Gemini via `@google/generative-ai` |
+| AI | OpenAI, Anthropic Claude, or Google Gemini via direct REST integration |
 
 ---
 
