@@ -146,28 +146,29 @@ async function seedFromJson() {
 
   const insertSubsection = db.prepare('INSERT OR IGNORE INTO subsections (code, title, objective_text) VALUES (?, ?, ?)');
   const insertTopic = db.prepare('INSERT INTO topics (subsection_id, name) VALUES (?, ?)');
+  const insertSubtopic = db.prepare('INSERT INTO subtopics (topic_id, name) VALUES (?, ?)');
 
   const transaction = db.transaction((data) => {
     for (const domain of data) {
       for (const sub of domain.subsections) {
-        // Use the title from JSON
         const objectiveText = `Domain ${domain.code}: ${domain.title}. Objective: ${sub.title}`;
         insertSubsection.run(sub.code, sub.title, objectiveText);
         
         const subIdQuery = db.prepare('SELECT id FROM subsections WHERE code = ?').get(sub.code);
         if (subIdQuery) {
           const subId = subIdQuery.id;
-          // In objectives.json, topics is an array of objects
           for (const topicObj of sub.topics) {
-            // Use the topic name
-            const topicName = topicObj.name;
-            insertTopic.run(subId, topicName);
+            const topicInfo = insertTopic.run(subId, topicObj.name);
+            const topicId = topicInfo.lastInsertRowid;
             
-            // Note: Plan mentions granular subtopics. 
-            // We append them to the topic name for study sessions if they exist
             if (topicObj.subtopics && topicObj.subtopics.length > 0) {
-                // Future enhancement: could store subtopics in a separate table
-                // For now, we'll keep them in context for the AI prompt
+              for (const subtopicName of topicObj.subtopics) {
+                insertSubtopic.run(topicId, subtopicName);
+              }
+            } else {
+              // Fallback: If no subtopics, use the topic name itself as a subtopic
+              // so the study queue has a target.
+              insertSubtopic.run(topicId, topicObj.name);
             }
           }
         }
