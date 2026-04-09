@@ -11,6 +11,14 @@ const StudySession = () => {
   const { subsectionId } = useParams();
   const navigate = useNavigate();
   
+  const [questionData, setQuestionData] = useState(null);
+  const [selectedAnswers, setSelectedAnswers] = useState([]);
+  const [revealed, setRevealed] = useState(false);
+  const [reason, setReason] = useState('');
+  const [rating, setRating] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
+  const [finished, setFinished] = useState(false);
   const [error, setError] = useState(null);
 
   useEffect(() => {
