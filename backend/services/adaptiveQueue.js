@@ -119,7 +119,7 @@ class AdaptiveQueue {
     const easyCount = recent.filter(a => a.rating === 'easy').length;
     
     if (easyCount >= 3) {
-      db.prepare('UPDATE subtopics SET mastery_status = "mastered" WHERE id = ?').run(this.currentSubtopicId);
+      db.prepare("UPDATE subtopics SET mastery_status = 'mastered' WHERE id = ?").run(this.currentSubtopicId);
       await this.startNewSubtopic();
     } else {
       await this.replenishQueue();
