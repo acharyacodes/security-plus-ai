@@ -32,6 +32,11 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', database: db ? 'connected' : 'error' });
 });
 
+// Catch-all to serve index.html for SPA routing (must be last)
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
+});
+
 app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
