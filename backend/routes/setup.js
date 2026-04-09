@@ -29,21 +29,15 @@ router.post('/upload', upload.single('pdf'), async (req, res) => {
   }
 });
 
-// POST /api/setup/auto - Trigger from local file (the one already provided)
+// POST /api/setup/auto - Trigger from local verified JSON
 router.post('/auto', async (req, res) => {
   try {
-    const pdfPath = path.join(__dirname, '../../CompTIA Security+ SY0-701 Exam Objectives (7.0).pdf');
-    if (!fs.existsSync(pdfPath)) {
-      return res.status(404).json({ error: 'PDF not found at expected path' });
-    }
-
-    const domains = await parseSecurityPlusPdf(pdfPath);
-    await seedDatabase(domains);
-    
-    res.json({ message: 'Auto-setup complete!', domainsExtracted: domains.length });
+    const { seedFromJson } = require('../services/pdfParser');
+    const result = await seedFromJson();
+    res.json({ message: 'Auto-setup complete using verified syllabus!', domainsExtracted: result.domainsCount });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Failed to process PDF: ' + err.message });
+    res.status(500).json({ error: 'Failed to process syllabus: ' + err.message });
   }
 });
 

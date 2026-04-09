@@ -80,8 +80,8 @@ const Setup = ({ onSetupComplete }) => {
                 <FileCheck size={24} />
               </div>
               <div>
-                <h3 className="font-semibold text-slate-100">Auto-Process Local PDF</h3>
-                <p className="text-sm text-slate-500">I found a PDF in your root directory.</p>
+                <h3 className="font-semibold text-slate-100">Quick Start (Recommended)</h3>
+                <p className="text-sm text-slate-500">Initialize instantly using the verified SY0-701 syllabus.</p>
               </div>
             </div>
             <button 
