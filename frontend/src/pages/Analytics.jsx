@@ -67,11 +67,11 @@ const Analytics = () => {
     
     const headers = ["Subtopic", "Question", "Correct Answer", "Your Reason", "Date"];
     const rows = history.map(h => [
-      `"${h.subtopic}"`,
-      `"${h.question.replace(/"/g, '""')}"`,
-      `"${h.correctAnswer.replace(/"/g, '""')}"`,
+      `"${(h.subtopic || 'Unknown').replace(/"/g, '""')}"`,
+      `"${(h.question || '').replace(/"/g, '""')}"`,
+      `"${(h.correctAnswer || '').replace(/"/g, '""')}"`,
       `"${(h.reason || '').replace(/"/g, '""')}"`,
-      new Date(h.date).toLocaleDateString()
+      h.date ? new Date(h.date).toLocaleDateString() : 'N/A'
     ]);
     
     const csvContent = [headers, ...rows].map(e => e.join(",")).join("\n");
@@ -100,11 +100,20 @@ const Analytics = () => {
     </div>
   );
 
+  if (!data || !data.stats) return (
+    <div className="text-center mt-20 glass-card p-12 max-w-xl mx-auto">
+      <AlertTriangle size={48} className="text-amber-500 mx-auto mb-6" />
+      <h2 className="text-2xl font-bold mb-4">Insufficient Data</h2>
+      <p className="text-slate-400 mb-8">No statistical data found for this subsection yet. Have you completed any study sessions?</p>
+      <button onClick={() => navigate('/')} className="btn-primary">Back to Dashboard</button>
+    </div>
+  );
+
   const { analysis, stats, topics } = data;
   const ratingData = [
-    { name: 'Again', value: stats.again_count, color: '#ef4444' },
-    { name: 'Hard', value: stats.hard_count, color: '#f59e0b' },
-    { name: 'Easy', value: stats.easy_count, color: '#22c55e' },
+    { name: 'Again', value: stats.again_count || 0, color: '#ef4444' },
+    { name: 'Hard', value: stats.hard_count || 0, color: '#f59e0b' },
+    { name: 'Easy', value: stats.easy_count || 0, color: '#22c55e' },
   ];
 
   return (
