@@ -33,7 +33,8 @@ app.get('/api/health', (req, res) => {
 });
 
 // Catch-all to serve index.html for SPA routing (must be last)
-app.get('*', (req, res) => {
+// In Express 5, the wildcard (*) must be named, e.g., *path
+app.get('*path', (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
 });
 
