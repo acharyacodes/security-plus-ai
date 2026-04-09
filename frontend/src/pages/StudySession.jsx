@@ -259,9 +259,18 @@ const StudySession = () => {
                   <button 
                     onClick={handleNext}
                     disabled={submitting}
-                    className="btn-primary w-full py-4 text-lg flex items-center justify-center gap-3 group"
+                    className="btn-primary w-full py-4 text-lg flex items-center justify-center gap-3 group relative overflow-hidden"
                   >
-                    Next Question <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+                    {submitting ? (
+                      <>
+                        <Loader2 size={20} className="animate-spin" /> 
+                        <span>Generating Next Set...</span>
+                      </>
+                    ) : (
+                      <>
+                        Next Question <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+                      </>
+                    )}
                   </button>
                 </div>
               )}
