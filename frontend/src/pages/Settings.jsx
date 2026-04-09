@@ -4,9 +4,9 @@ import axios from 'axios';
 
 const MODEL_PRESETS = {
   google: [
-    { id: 'gemini-1.5-flash', name: 'Gemini 1.5 Flash (Fast & Reliable)' },
-    { id: 'gemini-1.5-pro', name: 'Gemini 1.5 Pro (Powerful)' },
-    { id: 'gemini-2.0-flash', name: 'Gemini 2.0 Flash' },
+    { id: 'gemini-2.5-flash', name: 'Gemini 2.5 Flash (Recommended)' },
+    { id: 'gemini-2.5-pro', name: 'Gemini 2.5 Pro (Deep Reasoning)' },
+    { id: 'gemini-1.0-pro', name: 'Gemini 1.0 Pro (Legacy)' },
   ],
   openai: [
     { id: 'gpt-4o', name: 'GPT-4o (Omni)' },
@@ -23,7 +23,7 @@ const MODEL_PRESETS = {
 const Settings = () => {
   const [settings, setSettings] = useState({
     provider: 'google',
-    model: 'gemini-1.5-flash',
+    model: 'gemini-2.5-flash',
     apiKey: ''
   });
   const [testing, setTesting] = useState(false);
