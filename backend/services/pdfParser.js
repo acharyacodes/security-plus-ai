@@ -141,7 +141,7 @@ async function seedFromJson() {
   db.prepare('DELETE FROM topics').run();
   db.prepare('DELETE FROM subsections').run();
   db.prepare('DELETE FROM session_state').run();
-  db.prepare('DELETE FROM analytics').run();
+  db.prepare('DELETE FROM analytics_cache').run();
   db.prepare('DELETE FROM attempts').run();
 
   const insertSubsection = db.prepare('INSERT OR IGNORE INTO subsections (code, title, objective_text) VALUES (?, ?, ?)');
