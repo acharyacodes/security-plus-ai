@@ -41,3 +41,17 @@ The `CustomBuilder` flow bypasses the standard Domain-level queue.
 2. The UI sends an array of topic IDs to `/api/custom/create`.
 3. The backend spins up a unique `custom_session_state` table row.
 4. The generation loop isolates its focus to only the chosen array of IDs, creating a highly specific, curated drill.
+
+## Deployment & Persistence
+
+The application is designed to be fully self-contained and run locally on the user's machines.
+
+### Local Mode
+- **Frontend**: React served via Vite.
+- **Backend**: Node.js Express server.
+- **Storage**: SQLite file located at `backend/data/study.db`.
+
+### Docker Mode (Recommended)
+- **Architecture**: Multi-stage Docker build that bundles the frontend and backend into a single image.
+- **Isolation**: Runs as a non-privileged `node` user.
+- **Persistence**: Uses Docker Volumes to map `backend/data` and `uploads/` to persistent storage on the host machine, ensuring study history is not lost across container rebuilds.

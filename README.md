@@ -108,6 +108,28 @@ cd frontend && npm run dev
 
 That's it. You're ready to start your first practice session.
 
+### Running with Docker (Recommended for Public Deployment)
+
+The easiest way to run the platform in a portable, isolated environment is using Docker Compose.
+
+```bash
+# 1. Clone the repo and navigate inside
+git clone https://github.com/your-username/security-plus-ai.git
+cd security-plus-ai
+
+# 2. Create your environment file from the template
+cp .env.example .env
+
+# 3. (Optional) Edit .env to add your API keys early, or do it in the UI later
+
+# 4. Build and start the container
+docker-compose up -d
+```
+
+The app will be available at **http://localhost:3000**.
+
+> **Note**: Your study data and uploaded PDFs are persisted in Docker volumes (`study-data` and `study-uploads`), so they won't be lost when you stop or update the container.
+
 ---
 
 ## Features

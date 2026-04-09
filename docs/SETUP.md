@@ -17,7 +17,24 @@ The application builds its internal database structure by parsing the official s
 1. Download the official **CompTIA Security+ SY0-701 Exam Objectives** PDF from the CompTIA website.
 2. Keep this PDF handy; you will upload it via the UI.
 
-## 3. Initialization Walkthrough
+## 3. Setup with Docker (Recommended)
+
+Docker handles all dependencies and environment configuration for you.
+
+1. Ensure you have [Docker](https://www/docker.com/) and [Docker Compose](https://docs.docker.com/compose/) installed.
+2. Initialize your environment file:
+   ```bash
+   cp .env.example .env
+   ```
+3. (Optional) Open `.env` and enter your API keys.
+4. Launch the application:
+   ```bash
+   docker-compose up --build -d
+   ```
+5. Navigate to `http://localhost:3000`.
+6. Proceed to the **Setup Wizard** as described below.
+
+## 4. Manual Initialization Walkthrough
 
 Once you have run `npm install` in both the root and `frontend/` directories, start the application:
 

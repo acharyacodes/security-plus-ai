@@ -1,0 +1,16 @@
+node_modules
+npm-debug.log
+backend/data/*.db
+backend/data/*.db-journal
+backend/data/*.db-wal
+uploads/*
+!uploads/.gitkeep
+frontend/node_modules
+frontend/dist
+.env
+.git
+.gitignore
+Dockerfile
+docker-compose.yml
+README.md
+docs/
