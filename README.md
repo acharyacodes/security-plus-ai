@@ -103,7 +103,7 @@ cd frontend && npm run dev
 
 1. Open **http://localhost:5173** in your browser.
 2. The app will detect no database and redirect you to the `/setup` wizard.
-3. Upload your official CompTIA SY0-701 Objectives PDF.
+3. Click **"Quick Start (Recommended)"** to instantly build the perfect SY0-701 syllabus from the verified data file.
 4. Go to **Settings**, select your preferred AI provider, specify the exact model (e.g. `gpt-4o`), and paste your API key.
 
 That's it. You're ready to start your first practice session.
@@ -128,7 +128,7 @@ docker-compose up -d
 
 The app will be available at **http://localhost:3000**.
 
-> **Note**: Your study data and uploaded PDFs are persisted in Docker volumes (`study-data` and `study-uploads`), so they won't be lost when you stop or update the container.
+> **Note**: Your study data is persisted in the Docker volume `study-data`, so your progress won't be lost when you stop or update the container.
 
 ---
 

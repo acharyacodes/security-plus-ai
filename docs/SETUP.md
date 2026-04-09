@@ -12,10 +12,10 @@ This application supports multiple AI providers. You can choose any of the follo
 
 Copy your chosen key; you will need it during the app configuration.
 
-## 2. Acquiring the Syllabus
-The application builds its internal database structure by parsing the official syllabus.
-1. Download the official **CompTIA Security+ SY0-701 Exam Objectives** PDF from the CompTIA website.
-2. Keep this PDF handy; you will upload it via the UI.
+## 2. Setting up the Syllabus
+The application builds its internal database structure from the official SY0-701 objectives. You have two options:
+- **Quick Start (Recommended)**: Use the verified `objectives.json` file included in the repo. It's perfectly formatted and works instantly.
+- **PDF Upload**: Upload the official CompTIA PDF objectives if you have them. Note: PDF parsing can sometimes be imperfect depending on your OS.
 
 ## 3. Setup with Docker (Recommended)
 
@@ -49,7 +49,7 @@ npm run dev
 
 1. Navigate to `http://localhost:5173`.
 2. The UI will detect that the `study.db` file does not exist, or that it is empty, and will redirect you to the Setup Wizard.
-3. Upload the SY0-701 PDF. The backend will parse it, extract the 5 major Domains and all subtopics, and write this hierarchy into your new local database.
+3. Click **"Quick Start (Recommended)"**. The backend will instantly seed the 5 major Domains and all subtopics into your local database using the verified syllabus file.
 4. Once completed, navigate to the **Settings** page via the sidebar.
 5. Select your AI provider, enter your desired model name (e.g. `claude-3-5-sonnet-latest`), paste your API key, and click Save.
 
