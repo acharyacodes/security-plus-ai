@@ -323,7 +323,7 @@ async function callAI(settings, systemPrompt, userPrompt) {
             parts: [{ text: `${systemPrompt}\n\n${userPrompt}` }],
           },
         ],
-        generationConfig: { response_mime_type: 'application/json' },
+        generationConfig: { responseMimeType: 'application/json' },
       });
       return response.data.candidates[0].content.parts[0].text;
 
