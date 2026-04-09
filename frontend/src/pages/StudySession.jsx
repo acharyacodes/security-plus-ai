@@ -11,14 +11,7 @@ const StudySession = () => {
   const { subsectionId } = useParams();
   const navigate = useNavigate();
   
-  const [loading, setLoading] = useState(true);
-  const [questionData, setQuestionData] = useState(null);
-  const [selectedAnswers, setSelectedAnswers] = useState([]);
-  const [revealed, setRevealed] = useState(false);
-  const [reason, setReason] = useState('');
-  const [finished, setFinished] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
-  const [rating, setRating] = useState(null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     fetchQuestion();
@@ -26,13 +19,13 @@ const StudySession = () => {
 
   const fetchQuestion = async () => {
     setLoading(true);
+    setError(null);
     try {
       const { data } = await axios.get(`/api/study/session/${subsectionId}?t=${Date.now()}`);
       if (!data || data.length === 0) {
         setFinished(true);
       } else {
         setQuestionData(data);
-        // Load bookmarked state if present
         if (data.isRevealed) {
           setRevealed(true);
           setSelectedAnswers(data.selectedAnswers || []);
@@ -45,6 +38,7 @@ const StudySession = () => {
       }
     } catch (err) {
       console.error("Failed to fetch study session", err);
+      setError(err.response?.data?.error || err.message);
     } finally {
       setLoading(false);
     }
@@ -65,7 +59,6 @@ const StudySession = () => {
       selectedAnswers.length === questionData.question.options.filter(opt => opt.is_correct).length;
 
     try {
-      // Step 1: Submit Answer (Persists the revealed state)
       await axios.post(`/api/study/submit?t=${Date.now()}`, {
         subsectionId,
         questionId: questionData.question.id,
@@ -77,9 +70,9 @@ const StudySession = () => {
         userReason: reason,
         userConfidence: newRating === 'easy' ? 'high' : newRating === 'hard' ? 'medium' : 'low'
       });
-      // We stay on this screen to let user review
     } catch (err) {
       console.error("Failed to submit attempt", err);
+      setError("Failed to save progress. Check your connection.");
     } finally {
       setSubmitting(false);
     }
@@ -89,7 +82,6 @@ const StudySession = () => {
     if (!rating) return;
     setSubmitting(true);
     try {
-      // Step 2: Actually advance to the next question
       const { data } = await axios.post(`/api/study/advance?t=${Date.now()}`, {
         subsectionId,
         questionId: questionData.question.id,
@@ -112,15 +104,44 @@ const StudySession = () => {
       }
     } catch (err) {
       console.error("Failed to advance session", err);
+      setError(err.response?.data?.error || "Failed to generate next question.");
     } finally {
       setSubmitting(false);
     }
   };
 
   if (loading) return (
-    <div className="flex flex-col items-center justify-center h-screen gap-4">
-      <Loader2 size={40} className="animate-spin text-sky-500" />
-      <p className="text-slate-400 font-medium">Curating your next adaptive question...</p>
+    <div className="flex flex-col items-center justify-center h-screen gap-6">
+      <div className="relative">
+        <Loader2 size={60} className="animate-spin text-sky-500/20" />
+        <Loader2 size={60} className="animate-spin text-sky-500 absolute top-0 left-0 [animation-delay:-0.3s]" />
+      </div>
+      <div className="text-center">
+        <p className="text-xl font-bold premium-gradient-text animate-pulse">Curating Your Path</p>
+        <p className="text-slate-500 text-sm mt-1">Analyzing mastery gaps and generating objectives...</p>
+      </div>
+    </div>
+  );
+
+  if (error) return (
+    <div className="max-w-xl mx-auto mt-20 text-center glass-card p-12 border-rose-500/20">
+      <div className="w-20 h-20 rounded-full bg-rose-500/20 flex items-center justify-center text-rose-400 mx-auto mb-6">
+        <Info size={40} />
+      </div>
+      <h2 className="text-3xl font-bold mb-4 text-rose-100">Setup Required</h2>
+      <p className="text-slate-400 mb-8 leading-relaxed">
+        {error.includes('API key') 
+          ? "We couldn't generate questions because your AI API Key is missing or invalid. Please configure it in your settings to proceed."
+          : `Something went wrong: ${error}`}
+      </p>
+      <div className="flex gap-4">
+        <button onClick={() => navigate('/')} className="flex-1 btn-secondary">
+          Dashboard
+        </button>
+        <button onClick={() => navigate('/settings')} className="flex-1 btn-primary bg-rose-600 hover:bg-rose-500 border-rose-400/50">
+          Open Settings
+        </button>
+      </div>
     </div>
   );
 
