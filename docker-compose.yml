@@ -6,6 +6,7 @@ services:
     volumes:
       - study-data:/app/backend/data
       - study-uploads:/app/uploads
+      - "./CompTIA Security+ SY0-701 Exam Objectives (7.0).pdf:/app/CompTIA Security+ SY0-701 Exam Objectives (7.0).pdf:ro"
     environment:
       - PORT=3000
       - DB_PATH=/app/backend/data/study.db
