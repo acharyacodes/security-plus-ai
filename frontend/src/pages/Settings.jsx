@@ -58,15 +58,6 @@ const Settings = () => {
     setIsCustomModel(false);
   };
 
-  const handleModelChange = (e) => {
-    const value = e.target.value;
-    if (value === 'custom') {
-      setIsCustomModel(true);
-    } else {
-      setIsCustomModel(false);
-      setSettings({ ...settings, model: value });
-    }
-  };
 
   const handleTest = async () => {
     setTesting(true);
@@ -143,36 +134,26 @@ const Settings = () => {
           </div>
 
           <div className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Model Selection</label>
-                <div className="relative">
-                  <select 
-                    value={isCustomModel ? 'custom' : settings.model}
-                    onChange={handleModelChange}
-                    className="w-full p-4 rounded-xl bg-slate-950 border border-slate-800 text-slate-200 focus:outline-none focus:border-sky-500/50 transition-all appearance-none cursor-pointer pr-12 font-medium"
+            <div className="mb-6">
+              <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Target Model Name</label>
+              <input 
+                type="text" 
+                value={settings.model}
+                onChange={(e) => setSettings({ ...settings, model: e.target.value })}
+                placeholder={settings.provider === 'google' ? 'e.g. gemini-2.0-flash-exp' : settings.provider === 'openai' ? 'e.g. gpt-4o' : 'e.g. claude-3-5-sonnet-latest'}
+                className="w-full p-4 rounded-xl bg-slate-950 border border-slate-800 text-slate-200 focus:outline-none focus:border-sky-500/50 transition-all font-mono text-sm"
+              />
+              <div className="mt-3 flex flex-wrap gap-2">
+                {MODEL_PRESETS[settings.provider].map(m => (
+                  <button 
+                    key={m.id} 
+                    onClick={() => setSettings({ ...settings, model: m.id })}
+                    className="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded-lg transition-colors border border-slate-700 hover:border-sky-500/30"
                   >
-                    {MODEL_PRESETS[settings.provider].map(m => (
-                      <option key={m.id} value={m.id}>{m.name}</option>
-                    ))}
-                    <option value="custom">-- Custom Model ID --</option>
-                  </select>
-                  <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none" size={18} />
-                </div>
+                    {m.name}
+                  </button>
+                ))}
               </div>
-
-              {isCustomModel && (
-                <div className="animate-fade-in">
-                  <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Custom Model ID</label>
-                  <input 
-                    type="text" 
-                    value={settings.model}
-                    onChange={(e) => setSettings({ ...settings, model: e.target.value })}
-                    placeholder="e.g. gpt-4-turbo"
-                    className="w-full p-4 rounded-xl bg-slate-950 border border-slate-800 text-slate-200 focus:outline-none focus:border-sky-500/50 transition-all font-mono text-sm"
-                  />
-                </div>
-              )}
             </div>
 
             <div>
