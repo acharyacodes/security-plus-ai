@@ -132,17 +132,32 @@ async function seedDatabase(domains) {
  * Seeds the database directly from the verified objectives.json file.
  * This is the preferred method for the SY0-701 syllabus.
  */
+/**
+ * Seeds the database directly from the verified objectives.json file.
+ * This is the preferred method for the SY0-701 syllabus.
+ */
 async function seedFromJson() {
   const jsonPath = path.join(__dirname, '../data/objectives.json');
   const rawData = fs.readFileSync(jsonPath, 'utf8');
   const domains = JSON.parse(rawData);
 
-  // Clear existing to avoid duplicates
-  db.prepare('DELETE FROM topics').run();
-  db.prepare('DELETE FROM subsections').run();
-  db.prepare('DELETE FROM session_state').run();
-  db.prepare('DELETE FROM analytics_cache').run();
-  db.prepare('DELETE FROM attempts').run();
+  // Clear existing to avoid duplicates and constraint errors
+  db.prepare('PRAGMA foreign_keys = OFF').run();
+  
+  const tables = [
+    'subtopics', 'topics', 'subsections', 'questions', 
+    'attempts', 'analytics_cache', 'session_state', 
+    'custom_tests', 'custom_session_state'
+  ];
+  
+  for (const table of tables) {
+    db.prepare(`DELETE FROM ${table}`).run();
+  }
+  
+  // Reset ID sequences
+  db.prepare("DELETE FROM sqlite_sequence WHERE name IN ('subsections', 'topics', 'subtopics', 'questions', 'attempts', 'custom_tests')").run();
+  
+  db.prepare('PRAGMA foreign_keys = ON').run();
 
   const insertSubsection = db.prepare('INSERT OR IGNORE INTO subsections (code, title, objective_text) VALUES (?, ?, ?)');
   const insertTopic = db.prepare('INSERT INTO topics (subsection_id, name) VALUES (?, ?)');
@@ -158,6 +173,7 @@ async function seedFromJson() {
         if (subIdQuery) {
           const subId = subIdQuery.id;
           for (const topicObj of sub.topics) {
+            // Insert Topic and get its ID
             const topicInfo = insertTopic.run(subId, topicObj.name);
             const topicId = topicInfo.lastInsertRowid;
             
@@ -166,8 +182,7 @@ async function seedFromJson() {
                 insertSubtopic.run(topicId, subtopicName);
               }
             } else {
-              // Fallback: If no subtopics, use the topic name itself as a subtopic
-              // so the study queue has a target.
+              // Fallback: If no subtopics, use the topic name as a subtopic so session logic works
               insertSubtopic.run(topicId, topicObj.name);
             }
           }
