@@ -3,8 +3,15 @@ import { BrowserRouter as Router, Routes, Route, Link, useNavigate, useLocation 
 import { LayoutDashboard, BookOpen, BarChart3, Settings, ShieldCheck, ChevronRight, Menu, X, Sparkles } from 'lucide-react';
 import axios from 'axios';
 
-// Pages (to be implemented next)
+// Pages
 import ErrorPage from './pages/ErrorPage';
+import Setup from './pages/Setup';
+import Dashboard from './pages/Dashboard';
+import StudySession from './pages/StudySession';
+import Analytics from './pages/Analytics';
+import SettingsPage from './pages/Settings';
+import CustomBuilder from './pages/CustomBuilder';
+import CustomSession from './pages/CustomSession';
 
 class ErrorBoundary extends React.Component {
   constructor(props) {
