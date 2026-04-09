@@ -14,7 +14,7 @@ const Setup = ({ onSetupComplete }) => {
 
   const checkInitialFile = async () => {
     try {
-      const { data } = await axios.get('http://localhost:3000/api/setup/status');
+      const { data } = await axios.get('/api/setup/status');
       if (data.isSetup) {
         onSetupComplete();
       }
@@ -29,7 +29,7 @@ const Setup = ({ onSetupComplete }) => {
     setStatus('processing');
     setError(null);
     try {
-      const { data } = await axios.post('http://localhost:3000/api/setup/auto');
+      const { data } = await axios.post('/api/setup/auto');
       setStatus('complete');
       setTimeout(() => onSetupComplete(), 1500);
     } catch (err) {
@@ -51,7 +51,7 @@ const Setup = ({ onSetupComplete }) => {
     formData.append('pdf', file);
 
     try {
-      await axios.post('http://localhost:3000/api/setup/upload', formData, {
+      await axios.post('/api/setup/upload', formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
       setStatus('complete');

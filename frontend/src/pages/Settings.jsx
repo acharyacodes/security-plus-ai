@@ -38,7 +38,7 @@ const Settings = () => {
 
   const fetchSettings = async () => {
     try {
-      const { data } = await axios.get('http://localhost:3000/api/settings');
+      const { data } = await axios.get('/api/settings');
       if (data.provider) {
         setSettings(prev => ({ ...prev, ...data }));
         
@@ -63,7 +63,7 @@ const Settings = () => {
     setTesting(true);
     setTestResult(null);
     try {
-      const { data } = await axios.post('http://localhost:3000/api/settings/test', settings);
+      const { data } = await axios.post('/api/settings/test', settings);
       setTestResult(data.success ? 'success' : 'error');
     } catch (err) {
       setTestResult('error');
@@ -76,7 +76,7 @@ const Settings = () => {
     setSaving(true);
     setSaveStatus(null);
     try {
-      await axios.post('http://localhost:3000/api/settings', settings);
+      await axios.post('/api/settings', settings);
       setSaveStatus('success');
       setTimeout(() => setSaveStatus(null), 3000);
     } catch (err) {
@@ -238,7 +238,7 @@ const Settings = () => {
               onClick={async () => {
                 if (window.confirm("ARE YOU ABSOLUTELY SURE? This will permanently delete ALL study progress, analytics, and extracted topics. This cannot be undone.")) {
                   try {
-                    await axios.post('http://localhost:3000/api/setup/reset');
+                    await axios.post('/api/setup/reset');
                     window.location.href = '/setup';
                   } catch (err) {
                     alert("Failed to reset: " + err.message);

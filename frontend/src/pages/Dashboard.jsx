@@ -24,7 +24,7 @@ const Dashboard = () => {
 
   const fetchDashboard = async () => {
     try {
-      const { data } = await axios.get('http://localhost:3000/api/study/dashboard');
+      const { data } = await axios.get('/api/study/dashboard');
       if (Array.isArray(data)) {
         setDomains(data);
       } else {

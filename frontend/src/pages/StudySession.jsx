@@ -27,8 +27,8 @@ const StudySession = () => {
   const fetchQuestion = async () => {
     setLoading(true);
     try {
-      const { data } = await axios.get(`http://localhost:3000/api/study/session/${subsectionId}?t=${Date.now()}`);
-      if (data.finished) {
+      const { data } = await axios.get(`/api/study/session/${subsectionId}?t=${Date.now()}`);
+      if (!data || data.length === 0) {
         setFinished(true);
       } else {
         setQuestionData(data);
@@ -66,7 +66,7 @@ const StudySession = () => {
 
     try {
       // Step 1: Submit Answer (Persists the revealed state)
-      await axios.post(`http://localhost:3000/api/study/submit?t=${Date.now()}`, {
+      await axios.post(`/api/study/submit?t=${Date.now()}`, {
         subsectionId,
         questionId: questionData.question.id,
         topicId: questionData.question.topic_id,
@@ -90,7 +90,7 @@ const StudySession = () => {
     setSubmitting(true);
     try {
       // Step 2: Actually advance to the next question
-      const { data } = await axios.post(`http://localhost:3000/api/study/advance?t=${Date.now()}`, {
+      const { data } = await axios.post(`/api/study/advance?t=${Date.now()}`, {
         subsectionId,
         questionId: questionData.question.id,
         rating

@@ -95,7 +95,7 @@ const AppContent = () => {
 
   const checkSetupStatus = async () => {
     try {
-      const { data } = await axios.get('http://localhost:3000/api/setup/status');
+      const { data } = await axios.get('/api/setup/status');
       setIsSetup(data.isSetup);
       if (!data.isSetup && location.pathname !== '/setup') {
         navigate('/setup');

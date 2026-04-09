@@ -29,7 +29,7 @@ const CustomBuilder = () => {
   const searchTopics = async () => {
     setLoading(true);
     try {
-      const { data } = await axios.get(`http://localhost:3000/api/custom/topics?q=${query}`);
+      const { data } = await axios.get(`/api/custom/topics?q=${query}`);
       setResults(data);
     } catch (err) {
       console.error(err);
@@ -53,7 +53,7 @@ const CustomBuilder = () => {
   const launchTest = async () => {
     if (selected.length === 0) return;
     try {
-      const { data } = await axios.post('http://localhost:3000/api/custom/create', {
+      const { data } = await axios.post('/api/custom/create', {
         name: testName || `Custom Drill (${selected.length} Topics)`,
         topicIds: selected.map(s => s.id)
       });

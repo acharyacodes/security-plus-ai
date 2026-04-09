@@ -29,9 +29,9 @@ const Analytics = () => {
   const fetchAnalytics = async () => {
     setLoading(true);
     try {
-      const { data } = await axios.get(`http://localhost:3000/api/analytics/subsection/${subsectionId}`);
+      const { data } = await axios.get(`/api/analytics/subsection/${subsectionId}`);
       setData(data);
-      const historyRes = await axios.get(`http://localhost:3000/api/analytics/history/${subsectionId}`);
+      const historyRes = await axios.get(`/api/analytics/history/${subsectionId}`);
       setHistory(historyRes.data);
     } catch (err) {
       console.error("Failed to fetch analytics", err);
@@ -43,7 +43,7 @@ const Analytics = () => {
   const handleRefresh = async () => {
     setRefreshing(true);
     try {
-      await axios.post(`http://localhost:3000/api/analytics/refresh/${subsectionId}`);
+      await axios.post(`/api/analytics/refresh/${subsectionId}`);
       await fetchAnalytics();
     } catch (err) {
       console.error("Failed to refresh analysis", err);
@@ -55,7 +55,7 @@ const Analytics = () => {
   const handleRedo = async () => {
     if (!window.confirm("This will reset your mastery progress for this subsection. Your attempt history will be preserved for AI analysis. Continue?")) return;
     try {
-      await axios.post(`http://localhost:3000/api/analytics/redo/${subsectionId}`);
+      await axios.post(`/api/analytics/redo/${subsectionId}`);
       navigate(`/study/${subsectionId}`);
     } catch (err) {
       console.error("Failed to redo subsection", err);

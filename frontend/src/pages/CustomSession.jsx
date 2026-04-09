@@ -27,8 +27,8 @@ const CustomSession = () => {
   const fetchSession = async () => {
     setLoading(true);
     try {
-      const { data } = await axios.get(`http://localhost:3000/api/custom/session/${testId}?t=${Date.now()}`);
-      if (data.finished) {
+      const { data } = await axios.get(`/api/custom/session/${testId}?t=${Date.now()}`);
+      if (!data || data.length === 0) {
         setFinished(true);
       } else {
         setSessionData(data);
@@ -58,7 +58,7 @@ const CustomSession = () => {
     setRating(newRating);
     setSubmitting(true);
     try {
-      await axios.post(`http://localhost:3000/api/custom/submit?t=${Date.now()}`, {
+      await axios.post(`/api/custom/submit?t=${Date.now()}`, {
         testId,
         questionId: sessionData.question.id,
         rating: newRating,
@@ -75,7 +75,7 @@ const CustomSession = () => {
     if (!rating) return;
     setSubmitting(true);
     try {
-      const { data } = await axios.post(`http://localhost:3000/api/custom/advance?t=${Date.now()}`, {
+      const { data } = await axios.post(`/api/custom/advance?t=${Date.now()}`, {
         testId,
         rating
       });
