@@ -316,14 +316,13 @@ async function callAI(settings, systemPrompt, userPrompt) {
       return response.data.choices[0].message.content;
 
     } else if (provider === 'gemini' || provider === 'google') {
-      const url = `https://generativelanguage.googleapis.com/v1/models/${model}:generateContent?key=${apiKey}`;
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
       const response = await axios.post(url, {
         contents: [
           {
             parts: [{ text: `${systemPrompt}\n\n${userPrompt}` }],
           },
         ],
-        generationConfig: { responseMimeType: 'application/json' },
       });
       return response.data.candidates[0].content.parts[0].text;
 

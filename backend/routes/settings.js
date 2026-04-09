@@ -36,7 +36,7 @@ router.post('/test', async (req, res) => {
     if (provider === 'gemini' || provider === 'google') {
       const cleanModel = model.trim();
       const cleanKey = apiKey.trim();
-      const url = `https://generativelanguage.googleapis.com/v1/models/${cleanModel}:generateContent?key=${cleanKey}`;
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/${cleanModel}:generateContent?key=${cleanKey}`;
       const response = await axios.post(url, {
         contents: [{ parts: [{ text: "Hello, reply with 'ok'" }] }]
       });
