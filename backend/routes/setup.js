@@ -44,11 +44,25 @@ router.post('/auto', async (req, res) => {
 // POST /api/setup/reset - Wipe the database for re-parsing
 router.post('/reset', (req, res) => {
   try {
+    // Disable foreign keys temporarily to allow wiping in any order
+    db.prepare('PRAGMA foreign_keys = OFF').run();
+    
+    // Wipe all study-related data
+    db.prepare('DELETE FROM subtopics').run();
     db.prepare('DELETE FROM topics').run();
     db.prepare('DELETE FROM subsections').run();
+    db.prepare('DELETE FROM questions').run();
     db.prepare('DELETE FROM attempts').run();
-    db.prepare('DELETE FROM analytics').run();
+    db.prepare('DELETE FROM analytics_cache').run();
     db.prepare('DELETE FROM session_state').run();
+    db.prepare('DELETE FROM custom_tests').run();
+    db.prepare('DELETE FROM custom_session_state').run();
+    
+    // Reset sequences
+    db.prepare("DELETE FROM sqlite_sequence WHERE name IN ('subsections', 'topics', 'subtopics', 'questions', 'attempts', 'custom_tests')").run();
+    
+    db.prepare('PRAGMA foreign_keys = ON').run();
+    
     res.json({ message: 'Database wiped successfully' });
   } catch (err) {
     console.error(err);
