@@ -32,12 +32,23 @@ router.post('/refresh/:id', async (req, res) => {
 // POST /api/analytics/redo/:id
 router.post('/redo/:id', (req, res) => {
   const subsectionId = req.params.id;
-  // Reset mastery status for all topics in this subsection
-  db.prepare('UPDATE topics SET mastery_status = "not_started" WHERE subsection_id = ?').run(subsectionId);
+  
+  // Disable Foreign Keys briefly to allow mass reset if needed, though not strictly required for these DELETEs
+  db.prepare('PRAGMA foreign_keys = OFF').run();
+  
+  // Reset mastery status for all subtopics in ALL topics of this subsection
+  db.prepare(`
+    UPDATE subtopics SET mastery_status = 'not_started' 
+    WHERE topic_id IN (SELECT id FROM topics WHERE subsection_id = ?)
+  `).run(subsectionId);
+
+  // Reset completion flag
   db.prepare('UPDATE subsections SET is_complete = 0 WHERE id = ?').run(subsectionId);
   
   // Clean up the session state for this subsection
   db.prepare('DELETE FROM session_state WHERE current_subsection_id = ?').run(subsectionId);
+
+  db.prepare('PRAGMA foreign_keys = ON').run();
 
   res.json({ success: true, message: 'Subsection reset. Fresh questions will be generated informed by your previous history.' });
 });
@@ -56,10 +67,16 @@ function getSubsectionStats(subsectionId) {
 
 function getTopicBreakdown(subsectionId) {
   return db.prepare(`
-    SELECT t.name, t.mastery_status,
-    (SELECT COUNT(*) FROM attempts a WHERE a.topic_id = t.id) as attempts_count,
-    (SELECT COUNT(*) FROM attempts a WHERE a.topic_id = t.id AND a.is_correct = 0) as missed_count
-    FROM topics t WHERE t.subsection_id = ?
+    SELECT t.name,
+      CASE WHEN COUNT(st.id) > 0 
+                AND SUM(CASE WHEN st.mastery_status = 'mastered' THEN 1 ELSE 0 END) = COUNT(st.id) 
+           THEN 'mastered' ELSE 'not_started' END AS mastery_status,
+      (SELECT COUNT(*) FROM attempts a WHERE a.topic_id = t.id) as attempts_count,
+      (SELECT COUNT(*) FROM attempts a WHERE a.topic_id = t.id AND a.is_correct = 0) as missed_count
+    FROM topics t 
+    LEFT JOIN subtopics st ON st.topic_id = t.id
+    WHERE t.subsection_id = ?
+    GROUP BY t.id
   `).all(subsectionId);
 }
 

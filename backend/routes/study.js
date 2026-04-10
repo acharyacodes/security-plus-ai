@@ -89,6 +89,19 @@ router.post('/submit', async (req, res) => {
       userConfidence 
     } = req.body;
 
+    // Server-side verification of correctness (Item 4 of Claude Audit)
+    const question = db.prepare('SELECT options FROM questions WHERE id = ?').get(questionId);
+    if (!question) throw new Error("Question not found");
+    
+    const options = JSON.parse(question.options);
+    const correctIds = options
+      .filter(opt => opt.is_correct)
+      .map(opt => opt.id)
+      .sort((a, b) => a - b);
+    
+    const selectedSorted = [...selectedAnswers].sort((a, b) => a - b);
+    const verifiedCorrect = JSON.stringify(correctIds) === JSON.stringify(selectedSorted);
+
     // Record attempt
     db.prepare(`
       INSERT INTO attempts 
@@ -100,7 +113,7 @@ router.post('/submit', async (req, res) => {
       subsectionId, 
       req.body.subtopicId || null, 
       JSON.stringify(selectedAnswers), 
-      isCorrect ? 1 : 0, 
+      verifiedCorrect ? 1 : 0, 
       rating, 
       userReason, 
       userConfidence
@@ -128,9 +141,16 @@ router.post('/advance', async (req, res) => {
     await queue.advanceQueue(questionId, rating);
     
     const nextQuestion = queue.getNextQuestion();
+    let topicName = null;
+    if (nextQuestion) {
+      const topic = db.prepare('SELECT name FROM topics WHERE id = ?').get(nextQuestion.topic_id);
+      topicName = topic?.name;
+    }
+
     res.json({ 
       success: true, 
       nextQuestion, 
+      topicName,
       finished: !nextQuestion,
       progress: getSubsectionProgress(subsectionId)
     });

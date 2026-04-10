@@ -30,7 +30,7 @@ const StudySession = () => {
     setError(null);
     try {
       const { data } = await axios.get(`/api/study/session/${subsectionId}?t=${Date.now()}`);
-      if (!data || data.length === 0) {
+      if (!data || data.finished) {
         setFinished(true);
       } else {
         setQuestionData(data);
@@ -101,7 +101,7 @@ const StudySession = () => {
       } else {
         setQuestionData({
           question: data.nextQuestion,
-          topicName: data.nextQuestion.topic_name || questionData.topicName,
+          topicName: data.topicName || questionData.topicName,
           progress: data.progress
         });
         setSelectedAnswers([]);
@@ -191,14 +191,9 @@ const StudySession = () => {
       </header>
 
       {/* Progress Bar */}
-      <div className="glass-card p-4 rounded-2xl flex items-center gap-6">
+      <div className="glass-card p-4 rounded-2xl flex items-center justify-center">
         <div className="flex-1">
           <ProgressBar current={progress.mastered} total={progress.total} color="emerald" />
-        </div>
-        <div className="w-px h-10 bg-slate-800"></div>
-        <div className="px-4 text-center">
-          <p className="text-xs font-black uppercase text-slate-600 tracking-tighter">Session Streak</p>
-          <p className="text-lg font-black text-emerald-400">🔥 7</p>
         </div>
       </div>
 

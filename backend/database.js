@@ -4,6 +4,7 @@ require('dotenv').config();
 
 const dbPath = process.env.DB_PATH || path.join(__dirname, 'data', 'study.db');
 const db = new Database(dbPath);
+db.pragma('foreign_keys = ON');
 
 // Initialize schema
 db.exec(`
