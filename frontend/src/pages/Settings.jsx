@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Save, ShieldCheck, Zap, AlertCircle, CheckCircle2, ChevronRight, Key, Cpu, HelpCircle, ChevronDown } from 'lucide-react';
+import { Save, ShieldCheck, Zap, AlertCircle, CheckCircle2, Key, Cpu, Users, UserPlus, Trash2, KeyRound } from 'lucide-react';
 import axios from 'axios';
 
 const MODEL_PRESETS = {
@@ -20,7 +20,175 @@ const MODEL_PRESETS = {
   ]
 };
 
-const Settings = () => {
+// ─────────────────────────────────────────────
+// User Management panel (admin only)
+// ─────────────────────────────────────────────
+const UserManagement = ({ currentUsername }) => {
+  const [users, setUsers] = useState([]);
+  const [newUsername, setNewUsername] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [creating, setCreating] = useState(false);
+  const [createMsg, setCreateMsg] = useState(null);
+  const [resetTarget, setResetTarget] = useState(null);
+  const [resetPassword, setResetPassword] = useState('');
+
+  useEffect(() => { loadUsers(); }, []);
+
+  const loadUsers = async () => {
+    try {
+      const { data } = await axios.get('/api/auth/users');
+      setUsers(data);
+    } catch { /* not admin or error — component won't render anyway */ }
+  };
+
+  const handleCreate = async (e) => {
+    e.preventDefault();
+    setCreating(true);
+    setCreateMsg(null);
+    try {
+      await axios.post('/api/auth/users', { username: newUsername.trim(), password: newPassword });
+      setCreateMsg({ type: 'success', text: `User "${newUsername.trim()}" created.` });
+      setNewUsername('');
+      setNewPassword('');
+      loadUsers();
+    } catch (err) {
+      setCreateMsg({ type: 'error', text: err.response?.data?.error || 'Failed to create user.' });
+    } finally {
+      setCreating(false);
+    }
+  };
+
+  const handleDelete = async (username) => {
+    if (!window.confirm(`Delete user "${username}"? This cannot be undone.`)) return;
+    try {
+      await axios.delete(`/api/auth/users/${username}`);
+      loadUsers();
+    } catch (err) {
+      alert(err.response?.data?.error || 'Failed to delete user.');
+    }
+  };
+
+  const handleResetPassword = async (e) => {
+    e.preventDefault();
+    try {
+      await axios.post(`/api/auth/users/${resetTarget}/password`, { password: resetPassword });
+      setResetTarget(null);
+      setResetPassword('');
+      alert(`Password updated for "${resetTarget}".`);
+    } catch (err) {
+      alert(err.response?.data?.error || 'Failed to update password.');
+    }
+  };
+
+  return (
+    <div className="glass-card p-8">
+      <div className="flex items-center gap-3 mb-8">
+        <div className="w-10 h-10 rounded-xl bg-indigo-500/10 flex items-center justify-center text-indigo-400">
+          <Users size={24} />
+        </div>
+        <div>
+          <h3 className="text-xl font-bold">User Management</h3>
+          <p className="text-xs text-slate-500 font-bold uppercase tracking-widest">Admin Only</p>
+        </div>
+      </div>
+
+      {/* User list */}
+      <div className="space-y-3 mb-8">
+        {users.map(u => (
+          <div key={u.username} className="flex items-center justify-between p-4 rounded-xl bg-slate-900 border border-slate-800">
+            <div>
+              <span className="font-bold text-slate-200">{u.username}</span>
+              {u.is_admin === 1 && (
+                <span className="ml-2 text-[10px] font-black uppercase tracking-widest text-sky-500 bg-sky-500/10 px-2 py-0.5 rounded-full">Admin</span>
+              )}
+              <p className="text-xs text-slate-600 mt-0.5">
+                Created {new Date(u.created_at).toLocaleDateString()}
+              </p>
+            </div>
+            {u.username !== currentUsername && (
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => { setResetTarget(u.username); setResetPassword(''); }}
+                  className="p-2 rounded-lg text-slate-500 hover:text-amber-400 hover:bg-amber-500/10 transition-all"
+                  title="Reset password"
+                >
+                  <KeyRound size={16} />
+                </button>
+                <button
+                  onClick={() => handleDelete(u.username)}
+                  className="p-2 rounded-lg text-slate-500 hover:text-rose-400 hover:bg-rose-500/10 transition-all"
+                  title="Delete user"
+                >
+                  <Trash2 size={16} />
+                </button>
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+
+      {/* Reset password form */}
+      {resetTarget && (
+        <form onSubmit={handleResetPassword} className="mb-8 p-5 rounded-2xl bg-amber-500/5 border border-amber-500/20 space-y-3">
+          <p className="text-sm font-bold text-amber-400">Reset password for <span className="text-white">{resetTarget}</span></p>
+          <input
+            type="password"
+            value={resetPassword}
+            onChange={e => setResetPassword(e.target.value)}
+            placeholder="New password (min 6 chars)"
+            minLength={6}
+            required
+            className="w-full p-3 rounded-xl bg-slate-950 border border-slate-800 text-slate-200 focus:outline-none focus:border-amber-500/50 text-sm"
+          />
+          <div className="flex gap-2">
+            <button type="submit" className="btn-primary py-2 px-4 text-sm">Save</button>
+            <button type="button" onClick={() => setResetTarget(null)} className="btn-secondary py-2 px-4 text-sm">Cancel</button>
+          </div>
+        </form>
+      )}
+
+      {/* Create user form */}
+      <div className="pt-6 border-t border-slate-800">
+        <h4 className="font-bold text-slate-300 mb-4 flex items-center gap-2">
+          <UserPlus size={18} className="text-emerald-400" /> Add New User
+        </h4>
+        <form onSubmit={handleCreate} className="space-y-3">
+          <input
+            type="text"
+            value={newUsername}
+            onChange={e => setNewUsername(e.target.value)}
+            placeholder="Username"
+            required
+            className="w-full p-3 rounded-xl bg-slate-950 border border-slate-800 text-slate-200 focus:outline-none focus:border-sky-500/50 text-sm"
+          />
+          <input
+            type="password"
+            value={newPassword}
+            onChange={e => setNewPassword(e.target.value)}
+            placeholder="Password (min 6 characters)"
+            required
+            minLength={6}
+            className="w-full p-3 rounded-xl bg-slate-950 border border-slate-800 text-slate-200 focus:outline-none focus:border-sky-500/50 text-sm"
+          />
+          {createMsg && (
+            <p className={`text-sm font-medium ${createMsg.type === 'success' ? 'text-emerald-400' : 'text-rose-400'}`}>
+              {createMsg.text}
+            </p>
+          )}
+          <button type="submit" disabled={creating} className="btn-primary py-2.5 px-5 text-sm flex items-center gap-2">
+            <UserPlus size={16} />
+            {creating ? 'Creating...' : 'Create User'}
+          </button>
+        </form>
+        <p className="text-xs text-slate-600 mt-3">
+          The new user's syllabus is seeded automatically — they can start studying immediately after logging in.
+        </p>
+      </div>
+    </div>
+  );
+};
+
+const Settings = ({ user }) => {
   const [settings, setSettings] = useState({
     provider: 'google',
     model: 'gemini-2.5-flash',
@@ -225,6 +393,9 @@ const Settings = () => {
             Your API keys are stored in your local SQLite database. While this file is private to your machine, it is unencrypted. Ensure your local device has appropriate disk encryption and access controls.
           </div>
         </div>
+
+        {/* User Management — admin only */}
+        {user?.isAdmin && <UserManagement currentUsername={user.username} />}
 
         {/* Danger Zone */}
         <div className="glass-card !border-rose-500/20 !bg-rose-500/5 p-8">

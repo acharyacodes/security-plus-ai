@@ -1,13 +1,18 @@
+const { AsyncLocalStorage } = require('async_hooks');
 const Database = require('better-sqlite3');
 const path = require('path');
-require('dotenv').config();
+const fs = require('fs');
 
-const dbPath = process.env.DB_PATH || path.join(__dirname, 'data', 'study.db');
-const db = new Database(dbPath);
-db.pragma('foreign_keys = ON');
+// ─────────────────────────────────────────────────────────────
+// Each authenticated request runs inside storage.run(username, next).
+// Any code that calls db.prepare(...) transparently lands on
+// that user's private SQLite file — no changes needed in routes
+// or services.
+// ─────────────────────────────────────────────────────────────
+const storage = new AsyncLocalStorage();
+const dbCache = new Map();
 
-// Initialize schema
-db.exec(`
+const SCHEMA = `
   CREATE TABLE IF NOT EXISTS subsections (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     code TEXT UNIQUE,
@@ -38,7 +43,7 @@ db.exec(`
     question_text TEXT,
     question_type TEXT,
     multiple_correct INTEGER DEFAULT 0,
-    options TEXT, -- JSON string
+    options TEXT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (topic_id) REFERENCES topics(id),
     FOREIGN KEY (subtopic_id) REFERENCES subtopics(id)
@@ -50,9 +55,9 @@ db.exec(`
     topic_id INTEGER,
     subtopic_id INTEGER,
     subsection_id INTEGER,
-    selected_answers TEXT, -- JSON string
+    selected_answers TEXT,
     is_correct INTEGER,
-    rating TEXT, -- easy, hard, again
+    rating TEXT,
     user_reason TEXT,
     user_confidence TEXT,
     session_id TEXT,
@@ -77,14 +82,13 @@ db.exec(`
     value TEXT
   );
 
-  -- Internal state for current study session persistence
   CREATE TABLE IF NOT EXISTS session_state (
     current_subsection_id INTEGER PRIMARY KEY,
     current_topic_id INTEGER,
     current_subtopic_id INTEGER,
-    queue TEXT, -- JSON array of question IDs
-    is_revealed INTEGER DEFAULT 0, -- 1 if answers are currently shown
-    selected_answers TEXT, -- JSON array of user selections
+    queue TEXT,
+    is_revealed INTEGER DEFAULT 0,
+    selected_answers TEXT,
     last_updated DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (current_subsection_id) REFERENCES subsections(id)
   );
@@ -92,19 +96,65 @@ db.exec(`
   CREATE TABLE IF NOT EXISTS custom_tests (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
-    topic_ids TEXT, -- JSON array of topic IDs
-    subtopic_ids TEXT, -- JSON array of subtopic IDs
+    topic_ids TEXT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
   );
 
   CREATE TABLE IF NOT EXISTS custom_session_state (
     test_id INTEGER PRIMARY KEY,
-    queue TEXT, -- JSON array of question IDs
+    queue TEXT,
     is_revealed INTEGER DEFAULT 0,
     selected_answers TEXT,
     last_updated DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (test_id) REFERENCES custom_tests(id)
   );
-`);
+`;
 
-module.exports = db;
+function initSchema(db) {
+  db.pragma('foreign_keys = ON');
+  db.exec(SCHEMA);
+}
+
+function getUserDb(username) {
+  if (!dbCache.has(username)) {
+    const userDataDir = path.join(__dirname, 'data', 'users');
+    if (!fs.existsSync(userDataDir)) fs.mkdirSync(userDataDir, { recursive: true });
+
+    const dbPath = path.join(userDataDir, `${username}.db`);
+    const db = new Database(dbPath);
+    initSchema(db);
+    dbCache.set(username, db);
+  }
+  return dbCache.get(username);
+}
+
+// ─────────────────────────────────────────────────────────────
+// Proxy — every property access is routed to the current user's
+// Database instance based on the AsyncLocalStorage context.
+// ─────────────────────────────────────────────────────────────
+const dbProxy = new Proxy({}, {
+  get(target, prop) {
+    // Allow properties attached directly to the proxy (storage, getUserDb)
+    if (Object.prototype.hasOwnProperty.call(target, prop)) return target[prop];
+
+    // Ignore Symbol lookups (Symbol.toPrimitive, Symbol.iterator, etc.)
+    if (typeof prop === 'symbol') return undefined;
+
+    const username = storage.getStore();
+    if (!username) {
+      throw new Error(
+        `DB accessed without a user context (prop: "${prop}"). ` +
+        'Is the auth middleware missing for this route?'
+      );
+    }
+
+    const db = getUserDb(username);
+    const val = db[prop];
+    return typeof val === 'function' ? val.bind(db) : val;
+  },
+});
+
+// Attach helpers — server.js and auth.js import these directly
+module.exports = dbProxy;
+module.exports.storage = storage;
+module.exports.getUserDb = getUserDb;

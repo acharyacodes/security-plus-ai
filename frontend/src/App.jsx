@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useNavigate, useLocation } from 'react-router-dom';
-import { LayoutDashboard, BookOpen, BarChart3, Settings, ShieldCheck, ChevronRight, Menu, X, Sparkles } from 'lucide-react';
+import { LayoutDashboard, BarChart3, Settings, ShieldCheck, ChevronRight, Sparkles, LogOut, User, X } from 'lucide-react';
 import axios from 'axios';
 
 // Pages
@@ -12,6 +12,7 @@ import Analytics from './pages/Analytics';
 import SettingsPage from './pages/Settings';
 import CustomBuilder from './pages/CustomBuilder';
 import CustomSession from './pages/CustomSession';
+import Login from './pages/Login';
 
 class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -29,13 +30,13 @@ class ErrorBoundary extends React.Component {
   }
 }
 
-const Sidebar = () => {
+const Sidebar = ({ user, onLogout }) => {
   const location = useLocation();
   const menuItems = [
-    { name: 'Dashboard', path: '/', icon: <LayoutDashboard size={20} /> },
-    { name: 'Analytics', path: '/analytics', icon: <BarChart3 size={20} /> },
-    { name: 'Custom Test', path: '/custom-builder', icon: <Sparkles size={20} /> },
-    { name: 'Settings', path: '/settings', icon: <Settings size={20} /> },
+    { name: 'Dashboard',    path: '/',               icon: <LayoutDashboard size={20} /> },
+    { name: 'Analytics',    path: '/analytics',      icon: <BarChart3 size={20} /> },
+    { name: 'Custom Test',  path: '/custom-builder', icon: <Sparkles size={20} /> },
+    { name: 'Settings',     path: '/settings',       icon: <Settings size={20} /> },
   ];
 
   return (
@@ -53,8 +54,8 @@ const Sidebar = () => {
             key={item.name}
             to={item.path}
             className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${
-              location.pathname === item.path 
-                ? 'bg-sky-500/10 text-sky-400 border border-sky-500/20 shadow-sm' 
+              location.pathname === item.path
+                ? 'bg-sky-500/10 text-sky-400 border border-sky-500/20 shadow-sm'
                 : 'text-slate-400 hover:text-slate-100 hover:bg-slate-800'
             }`}
           >
@@ -65,37 +66,74 @@ const Sidebar = () => {
         ))}
       </nav>
 
-      <div className="mt-auto p-4 rounded-2xl bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-800">
-        <p className="text-xs text-slate-500 mb-1 text-center font-bold tracking-widest uppercase">SY0-701 Progress</p>
-        <div className="w-full bg-slate-700 h-1.5 rounded-full mt-2">
-          <div className="bg-sky-500 h-full rounded-full w-0 transition-all duration-1000" id="global-progress"></div>
+      {/* User info + logout */}
+      <div className="mt-4 space-y-3">
+        <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-slate-800/50 border border-slate-800">
+          <div className="w-7 h-7 rounded-full bg-sky-500/20 flex items-center justify-center text-sky-400 shrink-0">
+            <User size={14} />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-bold text-slate-200 truncate">{user?.username}</p>
+            {user?.isAdmin && (
+              <p className="text-[10px] font-bold uppercase tracking-widest text-sky-500">Admin</p>
+            )}
+          </div>
         </div>
+
+        <button
+          onClick={onLogout}
+          className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-500 hover:text-rose-400 hover:bg-rose-500/5 transition-all duration-200"
+        >
+          <LogOut size={18} />
+          <span className="font-medium text-sm">Sign Out</span>
+        </button>
       </div>
     </aside>
   );
 };
 
 const AppContent = () => {
+  const [user, setUser] = useState(undefined); // undefined = loading, null = not logged in
+  const [needsBootstrap, setNeedsBootstrap] = useState(false);
   const [isSetup, setIsSetup] = useState(null);
   const [apiError, setApiError] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
-    // ── Global API Interceptor ──
+    // Intercept 401 responses from any API call (session expired mid-use)
     const interceptor = axios.interceptors.response.use(
       (response) => response,
       (error) => {
+        if (error.response?.status === 401 && !error.config.url.includes('/api/auth/')) {
+          setUser(null);
+        }
         if (!error.response) {
           setApiError('The Security+ AI Backend is unreachable. Check your connection or Pi status.');
         }
         return Promise.reject(error);
       }
     );
-
-    checkSetupStatus();
+    checkAuthStatus();
     return () => axios.interceptors.response.eject(interceptor);
   }, []);
+
+  const checkAuthStatus = async () => {
+    try {
+      const { data } = await axios.get('/api/auth/status');
+      if (data.needsBootstrap) {
+        setNeedsBootstrap(true);
+        setUser(null);
+      } else if (data.loggedIn) {
+        setUser(data.user);
+        checkSetupStatus();
+      } else {
+        setUser(null);
+      }
+    } catch {
+      setUser(null);
+    }
+  };
 
   const checkSetupStatus = async () => {
     try {
@@ -104,12 +142,37 @@ const AppContent = () => {
       if (!data.isSetup && location.pathname !== '/setup') {
         navigate('/setup');
       }
-    } catch (err) {
-      console.error("Failed to check setup status", err);
+    } catch {
       setIsSetup(false);
     }
   };
 
+  const handleLogin = (userData) => {
+    setUser(userData);
+    setNeedsBootstrap(false);
+    checkSetupStatus();
+  };
+
+  const handleLogout = async () => {
+    try {
+      await axios.post('/api/auth/logout');
+    } catch { /* ignore */ }
+    setUser(null);
+    setIsSetup(null);
+    navigate('/');
+  };
+
+  // ── Loading state ────────────────────────────────────────────
+  if (user === undefined) return (
+    <div className="min-h-screen bg-slate-950 flex items-center justify-center">
+      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-sky-500"></div>
+    </div>
+  );
+
+  // ── Not logged in ────────────────────────────────────────────
+  if (!user) return <Login onLogin={handleLogin} needsBootstrap={needsBootstrap} />;
+
+  // ── Logged in but setup status unknown ───────────────────────
   if (isSetup === null) return (
     <div className="min-h-screen bg-slate-950 flex items-center justify-center">
       <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-sky-500"></div>
@@ -124,11 +187,13 @@ const AppContent = () => {
         <div className="fixed top-6 left-1/2 -translate-x-1/2 z-[60] bg-rose-600 text-white px-6 py-3 rounded-full shadow-2xl flex items-center gap-3 animate-slide-down border border-rose-400">
           <ShieldCheck size={20} />
           <span className="font-bold text-sm tracking-tight">{apiError}</span>
-          <button onClick={() => setApiError(null)} className="ml-4 hover:text-rose-200 transition-colors"><X size={16} /></button>
+          <button onClick={() => setApiError(null)} className="ml-4 hover:text-rose-200 transition-colors">
+            <X size={16} />
+          </button>
         </div>
       )}
 
-      {showSidebar && <Sidebar />}
+      {showSidebar && <Sidebar user={user} onLogout={handleLogout} />}
       <main className={`flex-1 transition-all duration-300 ${showSidebar ? 'pl-64' : ''}`}>
         <div className="max-w-7xl mx-auto p-6 md:p-10">
           <Routes>
@@ -137,10 +202,9 @@ const AppContent = () => {
             <Route path="/study/:subsectionId" element={<StudySession />} />
             <Route path="/analytics/:subsectionId" element={<Analytics />} />
             <Route path="/analytics" element={<Analytics />} />
-            <Route path="/settings" element={<SettingsPage />} />
+            <Route path="/settings" element={<SettingsPage user={user} />} />
             <Route path="/custom-builder" element={<CustomBuilder />} />
             <Route path="/custom-session/:testId" element={<CustomSession />} />
-            {/* Catch-all 404 component */}
             <Route path="*" element={<ErrorPage type="404" />} />
           </Routes>
         </div>

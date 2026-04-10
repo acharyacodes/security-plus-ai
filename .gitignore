@@ -3,11 +3,13 @@ node_modules/
 backend/node_modules/
 frontend/node_modules/
 
-# Database Files (Sensitive Data & API Keys)
+# Database & Secrets (Sensitive Data)
 backend/data/*.db
 backend/data/*.sqlite
 backend/data/*.sqlite3
 backend/data/*.db-journal
+backend/data/users/
+backend/data/session.secret
 
 # Uploaded Files
 uploads/
@@ -26,5 +28,6 @@ frontend/dist/
 .DS_Store
 Thumbs.db
 
-# Internal Audit
+# Internal Tools & Audit
 CODE_REVIEW.md
+.claude/
