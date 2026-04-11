@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useNavigate, useLocation } from 'react-router-dom';
-import { LayoutDashboard, BarChart3, Settings, ShieldCheck, ChevronRight, Sparkles, LogOut, User, X } from 'lucide-react';
+import { LayoutDashboard, BarChart3, Settings, ShieldCheck, ChevronRight, Sparkles, LogOut, User, X, Menu } from 'lucide-react';
 import axios from 'axios';
 
 // Pages
@@ -30,7 +30,7 @@ class ErrorBoundary extends React.Component {
   }
 }
 
-const Sidebar = ({ user, onLogout }) => {
+const Sidebar = ({ user, onLogout, open, onClose }) => {
   const location = useLocation();
   const menuItems = [
     { name: 'Dashboard',    path: '/',               icon: <LayoutDashboard size={20} /> },
@@ -40,19 +40,35 @@ const Sidebar = ({ user, onLogout }) => {
   ];
 
   return (
-    <aside className="h-screen w-64 bg-slate-900 border-r border-slate-800 flex flex-col p-4 fixed left-0 top-0 z-50">
-      <div className="flex items-center gap-3 mb-10 px-2">
-        <div className="w-10 h-10 rounded-xl bg-sky-500 flex items-center justify-center shadow-lg shadow-sky-500/20">
-          <ShieldCheck className="text-white" size={24} />
-        </div>
-        <h1 className="text-xl font-bold tracking-tight">Security+ <span className="text-sky-400">AI</span></h1>
-      </div>
+    <>
+      {/* Mobile Backdrop */}
+      {open && (
+        <div 
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[55] md:hidden mobile-overlay"
+          onClick={onClose}
+        />
+      )}
 
-      <nav className="flex-1 space-y-2">
+      <aside className={`h-screen w-64 bg-slate-900 border-r border-slate-800 flex flex-col p-4 fixed left-0 top-0 z-[60] transition-transform duration-300 ease-in-out md:translate-x-0 ${open ? 'translate-x-0 shadow-2xl shadow-sky-500/10' : '-translate-x-full'}`}>
+        <div className="flex items-center justify-between mb-10 px-2">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-sky-500 flex items-center justify-center shadow-lg shadow-sky-500/20">
+              <ShieldCheck className="text-white" size={24} />
+            </div>
+            <h1 className="text-xl font-bold tracking-tight">Security+ <span className="text-sky-400">AI</span></h1>
+          </div>
+          <button onClick={onClose} className="md:hidden p-2 text-slate-500 hover:text-white transition-colors cursor-pointer rounded-lg hover:bg-slate-800">
+            <X size={24} />
+          </button>
+        </div>
+
+      <nav className="flex-1 space-y-2 overflow-y-auto pr-2">
         {menuItems.map((item) => (
           <Link
             key={item.name}
             to={item.path}
+            onClick={onClose}
+
             className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${
               location.pathname === item.path
                 ? 'bg-sky-500/10 text-sky-400 border border-sky-500/20 shadow-sm'
@@ -89,16 +105,23 @@ const Sidebar = ({ user, onLogout }) => {
         </button>
       </div>
     </aside>
+    </>
   );
 };
 
 const AppContent = () => {
   const [user, setUser] = useState(undefined); // undefined = loading, null = not logged in
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [needsBootstrap, setNeedsBootstrap] = useState(false);
   const [isSetup, setIsSetup] = useState(null);
   const [apiError, setApiError] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
+
+  // Close sidebar on navigation to a new route (mobile improvement)
+  useEffect(() => {
+    setSidebarOpen(false);
+  }, [location.pathname]);
 
   useEffect(() => {
     // Intercept 401 responses from any API call (session expired mid-use)
@@ -182,7 +205,7 @@ const AppContent = () => {
   const showSidebar = location.pathname !== '/setup' && isSetup;
 
   return (
-    <div className="flex min-h-screen bg-slate-950 text-slate-100 relative">
+    <div className="flex min-h-screen bg-slate-950 text-slate-100 relative overflow-x-hidden">
       {apiError && (
         <div className="fixed top-6 left-1/2 -translate-x-1/2 z-[60] bg-rose-600 text-white px-6 py-3 rounded-full shadow-2xl flex items-center gap-3 animate-slide-down border border-rose-400">
           <ShieldCheck size={20} />
@@ -193,9 +216,31 @@ const AppContent = () => {
         </div>
       )}
 
-      {showSidebar && <Sidebar user={user} onLogout={handleLogout} />}
-      <main className={`flex-1 transition-all duration-300 ${showSidebar ? 'pl-64' : ''}`}>
-        <div className="max-w-7xl mx-auto p-6 md:p-10">
+      {showSidebar && (
+        <Sidebar user={user} onLogout={handleLogout} open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      )}
+
+      <main className={`flex-1 transition-all duration-300 ${showSidebar ? 'md:pl-64' : ''}`}>
+        {/* Mobile Navbar */}
+        {showSidebar && (
+          <div className="md:hidden sticky top-0 left-0 right-0 h-16 bg-slate-950/80 backdrop-blur-md border-b border-slate-800 flex items-center justify-between px-6 z-40">
+            <button 
+              onClick={() => setSidebarOpen(true)}
+              className="p-2 -ml-2 text-slate-400 hover:text-white"
+            >
+              <Menu size={24} />
+            </button>
+            <div className="flex items-center gap-2">
+              <ShieldCheck className="text-sky-400" size={20} />
+              <span className="font-bold text-sm">Security+ AI</span>
+            </div>
+            <div className="w-10 h-10 rounded-full bg-sky-500/10 flex items-center justify-center text-sky-400">
+              <User size={16} />
+            </div>
+          </div>
+        )}
+
+        <div className="max-w-7xl mx-auto p-4 md:p-8 lg:p-10">
           <Routes>
             <Route path="/setup" element={<Setup onSetupComplete={() => { setIsSetup(true); navigate('/'); }} />} />
             <Route path="/" element={<Dashboard />} />

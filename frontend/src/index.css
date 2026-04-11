@@ -107,3 +107,17 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #334155;
 }
+
+/* Mobile Sidebar Drawer */
+.sidebar-drawer {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.mobile-overlay {
+  animation: fadeInOverlay 0.2s ease-out forwards;
+}
+
+@keyframes fadeInOverlay {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
